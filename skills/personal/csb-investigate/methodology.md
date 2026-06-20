@@ -8,6 +8,20 @@ The CSB is a scientific, non-regulatory body: it determines *causes* and issues
 *recommendations*. It does not assign fault or penalties. Keep the tone factual
 and systems-focused, not blame-focused.
 
+**Grounding.** This methodology is distilled from the full CSB archive. While
+investigating, consult [reference/patterns.md](reference/patterns.md) for the
+recurring root-cause archetypes and the safeguards that typically fail, and
+[reference/cases/](reference/cases) for precedents (grep by company, hazard,
+material, or equipment). Over 120 real investigations point to one overriding
+lesson:
+
+**Beyond human error.** "Operator error" describes the trigger, not the accident.
+In nearly every fatal case the operator was the last name on a long list of
+decisions by designers, managers, and prior investigators. Do not stop at the
+person. If a single human slip can cause a release, fire, or fatality with no
+engineered backstop, the finding is the missing backstop. Ask of every serious
+hazard: "what happens when, not if, someone makes the expected mistake."
+
 ## 1. Build the timeline (sequence of events)
 
 Reconstruct events in four phases:
@@ -40,6 +54,15 @@ until you reach a management system that could have prevented it. Stop at causes
 the organization can actually control.
 
 ## 3. Apply the analytical lenses
+
+### Match against known patterns
+Before and during the lens work, compare the incident to the archetypes in
+[reference/patterns.md](reference/patterns.md) (hazard never identified; failure
+to learn from precursors; MOC failure at a transition; non-routine/turnaround
+work; isolation verified on paper only; human action credited as a safeguard;
+safeguard sized or located for the wrong scenario; mechanical-integrity defect
+found but not fixed; siting; regulatory gap). Naming the archetype quickly points
+to the likely root causes and the safeguard that usually fails for this hazard.
 
 ### Process Safety Management (PSM) element review
 Test the incident against the relevant PSM elements and name the gaps:

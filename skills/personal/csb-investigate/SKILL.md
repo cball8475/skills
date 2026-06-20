@@ -9,7 +9,10 @@ Apply the same tools, analysis, and logic the U.S. Chemical Safety Board uses to
 investigate a *new* incident and produce a right-sized, CSB-format report.
 
 This skill is **self-contained** — everything needed is in this folder. The
-reference files carry the detail; this file is the orchestration layer.
+reference files carry the detail; this file is the orchestration layer. It is
+**grounded in the full CSB archive**: see [reference/patterns.md](reference/patterns.md)
+for the cross-corpus analysis and [reference/cases/](reference/cases) for ~120
+distilled investigations plus ~90 short-form incidents to use as precedents.
 
 ## Two rules that override convenience
 
@@ -32,7 +35,10 @@ reference files carry the detail; this file is the orchestration layer.
 3. **Analyze** — To the chosen depth, follow [methodology.md](methodology.md):
    timeline → causal factors → root causes → PSM / safeguard / hierarchy-of-
    controls / regulatory-gap lenses → findings → recommendations. Lighter tiers
-   run a subset of the lenses.
+   run a subset of the lenses. Pressure-test against
+   [reference/patterns.md](reference/patterns.md) and cite precedents from
+   [reference/cases/](reference/cases). Push past "operator error" to the
+   management-system root cause.
 4. **Corrective actions & effectiveness checks** — Follow
    [effectiveness-checks.md](effectiveness-checks.md): screen recommendations
    down to **value-added** corrective actions, then write a **SMART effectiveness

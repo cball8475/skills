@@ -26,9 +26,14 @@ distilled investigations plus ~90 short-form incidents to use as precedents.
 
 ## Workflow (gated — do not skip ahead)
 
-1. **Intake interview** — Walk [intake.md](intake.md). Collect the facts, list
-   what is known vs. unknown, and for each material gap offer 2–3 candidate
-   assumptions for the user to pick. Only proceed when intake is sufficient.
+1. **Intake** — If the user uploaded a filled
+   [templates/incident-intake-form.md](templates/incident-intake-form.md) (or
+   pasted equivalent facts), read it first and treat its answers as given; do
+   **not** re-ask what is already filled in. Otherwise walk
+   [intake.md](intake.md). Either way, list what is known vs. unknown and for each
+   material gap offer 2–3 candidate assumptions for the user to pick. Only proceed
+   when intake is sufficient. (Blank form to send the user:
+   `templates/incident-intake-form.md`.)
 2. **Triage / right-size** — Use [triage.md](triage.md) to score the risk and
    pick the product tier and depth (incident note → digest/case study → full
    Investigation Report → Hazard Investigation).

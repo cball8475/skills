@@ -4,6 +4,11 @@ Run this **before** any analysis. The goal is to collect facts, not to theorize.
 Ask in batches, confirm what you heard, and keep a running **known vs. unknown**
 list. Make no assumptions on your own.
 
+**If the user provides a filled intake form**
+([templates/incident-intake-form.md](templates/incident-intake-form.md)) or pasted
+equivalent facts, use it as the source of truth and skip questions already
+answered. Only work the gaps. The form mirrors the sections below.
+
 ## How to handle a missing fact
 
 When a fact is needed for the analysis and the user does not have it:

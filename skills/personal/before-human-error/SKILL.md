@@ -2,27 +2,53 @@
 name: before-human-error
 description: >-
   Autonomously produces the weekly "Before Human Error" incident-teardown
-  newsletter end to end, for Charlie to review and approve. Intended to fire on
-  a schedule every Friday (via a Claude Code scheduled session), so no manual
-  invocation is needed. Picks the next incident from the backlog, runs the
-  mandatory Positioning Pass, drafts a multi-source fact-checked teardown in the
-  house voice, runs the de-AI pass, saves it to Google Drive for review, and
-  stages the beehiiv + LinkedIn posts for Tuesday 9 AM ET publication. Maintains
-  a 2-3 issue buffer. Charlie supervises only; he does not write or operate.
+  newsletter end to end, for Charlie to review and approve. Triggered when
+  Charlie says "write article #N": picks that incident, runs the mandatory
+  Positioning Pass, drafts a multi-source fact-checked teardown in the house
+  voice, runs the de-AI pass, saves ONE canonical doc to Google Drive for
+  review, and stages the LinkedIn (full post) + optional beehiiv publication.
+  Publishing is manual; Charlie supervises and posts. Maintains a 2-3 issue
+  buffer.
 ---
 
 # Before Human Error — weekly teardown pipeline
 
 ## Operating rules (read D1 first)
 - DB: `before-human-error` (D1 id `06f4ca9c-7089-434b-a34a-b4c4803d23a7`).
-- Before anything, read `project_state` (cadence, operating_model,
-  source_policy, signature_sections, editorial_angle) and `operating_guide`
-  (Decision-Making Principle, voice, Positioning Pass, Sourcing & Fact
-  Discipline, latest market scan). D1 is the source of truth and may be newer
-  than this file.
-- Cadence: WEEKLY. Publish Tuesday 9:00 AM ET. Keep a 2-3 issue buffer.
-- Charlie = approve & review ONLY. Never publish without his approval.
-- Always explain the reasoning behind any recommendation.
+- Before anything, read `project_state` (operating_model_v2, cadence,
+  source_policy) and `operating_guide` (GUARDRAILS first, then Decision
+  Principle, voice, Positioning Pass, Sourcing & Fact Discipline, LinkedIn
+  Posting Playbook, latest market scan). D1 is the source of truth and may be
+  newer than this file.
+- TRIGGER: when Charlie says "write article #N", run this whole pipeline for
+  article N. Publishing is MANUAL — Charlie posts; this skill only drafts +
+  stages. Never publish or schedule anything yourself.
+- Cadence: WEEKLY, publish Tuesday. LinkedIn is the primary channel; beehiiv is
+  secondary while the list is tiny. Keep a 2-3 issue buffer.
+- Charlie = approve, review & publish. Always explain the reasoning behind any
+  recommendation.
+
+## Step 0 — GUARDRAILS GATE (non-negotiable; full text in operating_guide "GUARDRAILS")
+Purpose: stop the recurring failure of stating stale/assumed info as current
+fact and letting one data point become a rule. Apply on every run:
+1. VERIFY BEFORE ASSERT — re-check every changeable fact (issue/incident status,
+   who replied, subscriber/analytics numbers, dates, what is published) against
+   its LIVE source this run; never state it from memory. Label anything you
+   cannot verify as "per memory, unverified."
+2. RECONCILE CONTRADICTIONS — if two records disagree, stop and resolve before
+   reporting; never report the convenient one.
+3. ONE DATA POINT IS NOT A RULE — conclusions stay hypotheses with their
+   evidence and sample size; re-derive from current numbers each run.
+4. STABLE KEYS — reference incidents and sponsors by name or hazard type, never
+   by issue number.
+5. ONE SOURCE OF TRUTH — D1 is canonical (read first); ONE Google Doc per issue;
+   `main` is the only repo truth. No duplicates that can drift.
+
+Before handing Charlie ANYTHING to publish, or any status report, the GATE
+(all must be YES): [ ] claims 2-sourced or labeled unverified · [ ] statuses
+and numbers re-checked against the live source THIS run · [ ] assumptions /
+`[NEEDS INPUT]` flagged to Charlie · [ ] one canonical doc, no scratch
+duplicates. If any is NO, fix it or flag it before shipping.
 
 ## HARD RULES (non-negotiable)
 1. **No assumptions when the fact is obtainable. Sources are GLOBAL, not
@@ -88,25 +114,22 @@ practitioner ("carry back to your own site"). De-AI discipline: no
 throat-clearing, no balanced-clause polish, no em-dash tics, no
 "it's not just X, it's Y" cadence.
 
-## Step 3 — Save for review (smart Drive practice)
+## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:
-- `Issue NN - Draft` (Google Doc) with Positioning Pass output at the top and a
-  Sources block listing all 2+ citations. One canonical Doc - no duplicates.
+- `Issue NN - <Title>` (ONE Google Doc) holding: Positioning Pass (internal) +
+  the full LinkedIn post + the first-comment text + the article body + a Sources
+  block listing all 2+ citations. One doc only — no scratch duplicates.
 - `sources/` (primary report + corroborating sources), `figures/` (images).
 Then notify Charlie for review.
 
-## Step 4 — On Charlie's approval, stage publication for Tue 9 AM ET
-- beehiiv: create the post, schedule Tue 9:00 AM ET (email+web).
-- LinkedIn: output the FULL teardown formatted as a native LinkedIn text post
-  (NOT a teaser) for Charlie to paste into his native scheduler (cannot
-  auto-post to a personal profile). End with a one-line subscribe CTA, and put
-  the beehiiv link in the FIRST COMMENT, not the post body (outbound links in
-  the body suppress feed reach). Rationale (Charlie decision 2026-06-28): while
-  the audience and the analytics are still tiny (early issues), prioritize
-  reach, authority, and learning over email click-through. Do NOT claim "reach
-  is solved" — that was an overclaim off ~2 posts. Revisit the format and the
-  conversion question once there is a real sample (10+ posts); see
-  `operating_guide` LinkedIn Posting Playbook.
+## Step 4 — On Charlie's approval, prepare publication (Charlie posts; never auto-post)
+- LinkedIn (primary): the FULL teardown as a native text post (NOT a teaser),
+  ending with a one-line subscribe CTA; the beehiiv link goes in the FIRST
+  COMMENT, not the body (outbound links in the body suppress reach). Keep this
+  format until ~1,000 beehiiv subscribers (checkpoint at 500); see operating_guide
+  LinkedIn Posting Playbook. Do NOT claim "reach is solved."
+- beehiiv (secondary while list is tiny): prepare the post for Charlie to
+  schedule (no API; Charlie schedules and publishes).
 - Update `issues` (url, status) and `linkedin_posts` (planned row).
 
 ## Step 5 — Buffer + logging

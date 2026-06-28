@@ -41,11 +41,26 @@ description: >-
 ## Sourcing readiness (operational — separate from editorial scope)
 Editorial scope is GLOBAL. The only operational requirement is that an
 incident's PRIMARY source be reachable by an unattended run. An incident is
-`auto-ready` when its primary report is staged in the Drive archive OR on a
-network-allowlisted domain (the current environment blocks arbitrary web
-fetch). For a `pending-source` incident, stage the primary report in Drive
-first, or handle it as a supervised special. Never let the egress limit shrink
-the editorial scope — stage the source instead.
+`auto-ready` when its primary report is staged in the Drive archive OR is
+reachable on the open web. As of 2026-06-28 the network policy was widened and
+WebFetch works (verified live against csb.gov), so arbitrary web fetch is no
+longer blocked — fetch primary reports live when needed. The Drive CSB archive
+remains the durable fallback (and the fastest path), so prefer it when a report
+is already staged. For a `pending-source` incident whose primary report is not
+staged and not easily fetchable, stage the primary report in Drive first, or
+handle it as a supervised special. Never let any egress limit shrink the
+editorial scope — stage the source instead.
+
+### Drive CSB archive layout (where staged reports live)
+- Folder: `Before Human Error / CSB Archive /`.
+  - `reports/<csb_id>_<slug>/` — one folder per completed CSB investigation
+    (the full final-report PDF[s]). This path is stored in `incidents.report_path`
+    as `CSB Archive/reports/<csb_id>_<slug>` for every `auto-ready` CSB incident.
+  - `summaries/volume_N_<date>.pdf` — the four CSB "Incident Reports" volumes
+    (~94 shorter accidental-release events) for lighter-weight teardowns.
+  - `csb-archive-catalog.csv` — the full ~131-investigation index (name,
+    location, final-report date, detail URL, csb_id) for picking the next
+    incident and resolving its `report_path`.
 
 ## Step 1 — Positioning Pass (GATE; output written at top of draft)
 Do not write the body until 1-3 are answered in writing.

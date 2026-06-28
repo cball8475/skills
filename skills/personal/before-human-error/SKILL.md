@@ -96,9 +96,17 @@ Save to `Before Human Error / Issues / NN - Title /`:
 Then notify Charlie for review.
 
 ## Step 4 — On Charlie's approval, stage publication for Tue 9 AM ET
-- beehiiv: create the post, schedule Tue 9:00 AM (email+web).
-- LinkedIn: output a ready-to-paste post for Charlie to drop into LinkedIn's
-  native scheduler (cannot auto-post to a personal profile).
+- beehiiv: create the post, schedule Tue 9:00 AM ET (email+web).
+- LinkedIn: output the FULL teardown formatted as a native LinkedIn text post
+  (NOT a teaser) for Charlie to paste into his native scheduler (cannot
+  auto-post to a personal profile). End with a one-line subscribe CTA, and put
+  the beehiiv link in the FIRST COMMENT, not the post body (outbound links in
+  the body suppress feed reach). Rationale (Charlie decision 2026-06-28): while
+  the audience and the analytics are still tiny (early issues), prioritize
+  reach, authority, and learning over email click-through. Do NOT claim "reach
+  is solved" — that was an overclaim off ~2 posts. Revisit the format and the
+  conversion question once there is a real sample (10+ posts); see
+  `operating_guide` LinkedIn Posting Playbook.
 - Update `issues` (url, status) and `linkedin_posts` (planned row).
 
 ## Step 5 — Buffer + logging

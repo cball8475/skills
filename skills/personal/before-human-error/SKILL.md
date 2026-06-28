@@ -25,15 +25,27 @@ description: >-
 - Always explain the reasoning behind any recommendation.
 
 ## HARD RULES (non-negotiable)
-1. **No assumptions when the fact is obtainable.** CSB is primary but NOT the
-   only source. Pull facts from NTSB, OSHA, NIOSH FACE, EPA, journals,
-   standards bodies, contemporaneous news. If the primary report is silent,
-   GO RESEARCH the fact and cite the corroborating source. Do not assume; do
-   not flag-and-skip.
+1. **No assumptions when the fact is obtainable. Sources are GLOBAL, not
+   US-only.** The CSB + the Drive incident archive are a primary backbone, but
+   incidents and corroborating facts may come from anywhere: US (NTSB, OSHA,
+   NIOSH FACE, EPA), UK (HSE, public inquiries), EU (Seveso/eMARS), Australia
+   (royal commissions, ATSB), Canada (TSB), journals (IChemE Loss Prevention
+   Bulletin), standards bodies, and contemporaneous news. If the primary report
+   is silent, GO RESEARCH the fact and cite the corroborating source. Do not
+   assume; do not flag-and-skip.
 2. **Cite 2+ independent sources every issue. Never single-source.**
 3. Only mark `[NEEDS INPUT]` for a fact genuinely unobtainable after a real
    search, and surface it to Charlie at review.
 4. Run the de-AI pass; match the house voice exactly.
+
+## Sourcing readiness (operational — separate from editorial scope)
+Editorial scope is GLOBAL. The only operational requirement is that an
+incident's PRIMARY source be reachable by an unattended run. An incident is
+`auto-ready` when its primary report is staged in the Drive archive OR on a
+network-allowlisted domain (the current environment blocks arbitrary web
+fetch). For a `pending-source` incident, stage the primary report in Drive
+first, or handle it as a supervised special. Never let the egress limit shrink
+the editorial scope — stage the source instead.
 
 ## Step 1 — Positioning Pass (GATE; output written at top of draft)
 Do not write the body until 1-3 are answered in writing.

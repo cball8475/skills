@@ -171,8 +171,10 @@ impressions, first comment never posted, zero email capture). Every publish:
 5. Update D1: `issues.url` -> live URLs, status='published';
    `linkedin_posts` row gets the post URN/URL; insert a baseline
    `post_snapshots` row (hour ~0).
-6. At ~24h: check link engagements > 0 on the post. If 0, the funnel is
-   broken — investigate before the next publish.
+6. At ~24h: verify the pinned comment is still up, then check conversion on
+   the BEEHIIV side (site visits + new subscribers since the post). Do NOT use
+   the post's "Link engagements" metric — it only counts post-body links, so
+   it reads 0 even when the pinned comment link is live and working.
 7. Rename the issue folder to add its now-frozen `NN - ` prefix.
 
 ## Step 5 — Buffer + logging

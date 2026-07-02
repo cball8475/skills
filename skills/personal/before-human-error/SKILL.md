@@ -158,6 +158,16 @@ account. These rules prevent the repeat:
 4. If a published channel already carries older text, flag it, stage the
    correction pack for Charlie, and record the discrepancy in `issues.notes`
    until the live page verifies clean.
+5. PUBLISHED BEATS DRAFTED. Once Charlie ships text to a channel, the shipped
+   version IS canon — capture it verbatim from the live page into
+   `issues.notes`, and bring the Drive doc into line with it (retitle stale
+   "FINAL" docs "(unpublished revision)"). Never grade a live post against an
+   unshipped draft, and never stage a "correction" toward one without
+   Charlie's explicit say-so. (Learned 2026-07-02: Issue 3 shipped a
+   third, newer variant; the Drive "FINAL ARTICLE" doc was never what
+   posted, and the session wrongly flagged the live body as stale.)
+   Cross-channel parity (LinkedIn == beehiiv) is the invariant to verify —
+   not doc == live.
 
 ## Step 4 — On Charlie's approval, stage publication (Charlie posts; never auto-post)
 Deliver ONE publish pack per issue, built ONLY from the canonical doc (Step 3.5

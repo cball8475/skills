@@ -186,7 +186,10 @@ Run in the same session the URLs arrive, or the next session:
 2. Download the live thumbnail and byte/dimension-compare against the issue's
    `figures/` cover (Issue-3 reference: LinkedIn cover == Drive cover, md5
    `4117fac0…`). Mismatched or wrong-issue banner = stage a manual swap for
-   Charlie (API can't do it).
+   Charlie (API can't do it). If banners LOOK cropped on Home/Archive, the
+   cause is the site builder's post-card setting (cards rendered 1:1
+   `object-fit:cover` as of 2026-07-02) — fix the card image-fit/aspect in
+   the builder; NEVER re-crop or pad the banner files to compensate.
 3. Same idea for LinkedIn: confirm the post is live, first comment posted and
    pinned with the right link, cover renders.
 4. Only then flip D1: `issues.status='published'` + `issues.url`,

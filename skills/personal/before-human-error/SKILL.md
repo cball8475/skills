@@ -136,7 +136,11 @@ operating_guide so the next issue inherits it.
    or Susca's hazard-gatekeeper lens (operating_guide id 17). Across issues, vary
    which tool leads — don't open with the same single method every time. Whatever
    you pick, show it walking the reader OFF the operator and up to the systemic
-   decision.
+   decision. Chains must be LINEAR — each answer becomes the subject of the next
+   question; don't skip a link (a lost flow has its own "why did it stop") and
+   don't branch into repeated "why not / why not". Validate a 5 Whys by reading it
+   BACKWARDS saying "therefore": if each step implies the one below it and it
+   still tracks, the chain is sound.
 3. AUTHORITATIVE FIGURES. Include 1-3 figures from the investigation's OWN report
    (CSB/RC/NTSB), captioned with a source credit — never custom graphics Charlie
    has to approve (Issue 4 lesson). If the case is non-CSB and has no reusable

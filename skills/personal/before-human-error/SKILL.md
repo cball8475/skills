@@ -114,6 +114,51 @@ practitioner ("carry back to your own site"). De-AI discipline: no
 throat-clearing, no balanced-clause polish, no em-dash tics, no
 "it's not just X, it's Y" cadence.
 
+## Step 2.5 — CARRY-FORWARD LESSONS GATE (grade every draft before it goes to review)
+This is the continuous-improvement loop made executable (operating_guide id 13):
+every issue must be graded against what earlier issues taught, so quality
+compounds instead of resetting. Do NOT set status -> review until each box is YES
+or explicitly flagged to Charlie with a reason. When a new issue teaches a new
+lesson (a hook/format/tool that landed or flopped), ADD it here and log it to
+operating_guide so the next issue inherits it.
+
+1. DATA-TRAIL SPINE. "What Actually Set It Up" carries the specific evidence the
+   investigators actually pulled — recorded process trends (temp/pressure/level),
+   as-found hardware, chemistry/metallurgy, audit gaps — not a narrative-only
+   causation. Give the reader concrete numbers and artifacts (Issue 3 standard).
+2. INVESTIGATIVE-TOOLS PASS. "How They Got Past Human Error" names at least one
+   concrete, transferable RCA method a practitioner already uses, and WORKS it on
+   this incident so the reader can reuse it — not "the investigators were
+   independent." Pick what fits and ROTATE across issues (don't repeat one tool
+   every time): 5 Whys, Ishikawa / fishbone (People, Methods/Procedures,
+   Equipment, Materials, Environment, Management), barrier analysis / bowtie,
+   causal tree / AcciMap, TapRooT, MORT, or Susca's hazard-gatekeeper lens
+   (operating_guide id 17). Show how the tool walks the reader OFF the operator
+   and up to the systemic decision.
+3. AUTHORITATIVE FIGURES. Include 1-3 figures from the investigation's OWN report
+   (CSB/RC/NTSB), captioned with a source credit — never custom graphics Charlie
+   has to approve (Issue 4 lesson). If the case is non-CSB and has no reusable
+   figure, spec the best available image and flag it for sourcing; don't ship
+   figureless if a real one exists.
+4. CITE & TAG THE CANON (operating_guide id 16). Name/plan to tag the relevant
+   canon for THIS incident — Conklin, Dekker, Kerin, Hopkins, CCPS Beacon, plus
+   the primary investigation body. On non-US cases tag the regional canon (e.g.
+   Longford -> Hopkins + Kerin).
+5. FIRST-PERSON PRACTITIONER VOICE. At least two genuine "I / on your own site"
+   peer moments; concede the obvious before reframing; run the de-AI pass. Not
+   detached third person.
+6. LEADING-INDICATOR / NEAR-MISS BEAT. Surface the ignored precursor or near-miss
+   as the hook, verified to the 2-source bar. (This is the Positioning Pass beat —
+   make sure it survives into the BODY, not just the internal notes.)
+7. SIGNATURE ENGAGEMENT DEVICES. In-body save-the-checklist / ten-minute
+   toolbox-talk line (proven Issue 3); a closing comment-bait question ending
+   "...I read every one"; Monday Morning Checklist = exactly three specific,
+   actionable checks.
+8. DISTRIBUTION LOCKS. LinkedIn Newsletter CTA = "Subscribe here on LinkedIn"
+   (locked Rev9); beehiiv link in the FIRST COMMENT only (pinned), selling the
+   inbox-a-day-early upgrade; LinkedIn body == beehiiv body, identical; 2+
+   independent sources cited.
+
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:
 - `Issue NN - <Title>` (ONE Google Doc) holding: Positioning Pass (internal) +

@@ -173,6 +173,22 @@ Save to `Before Human Error / Issues / NN - Title /`:
 - `sources/` (primary report + corroborating sources), `figures/` (images).
 Then notify Charlie for review.
 
+### Drive handling until edit access exists (READ THIS before saving)
+The connected Google Drive tool can CREATE, read, copy and search files but has
+NO edit-in-place or delete operation. So you cannot revise a Doc after saving it
+and you cannot remove old ones. To avoid a v1/v2/v3 trail:
+- Write the COMPLETE, finalized content on the FIRST create — run the whole
+  Step 2.5 gate BEFORE saving, not after. Treat the first save as final.
+- If a revision is unavoidable, create the new doc, repoint `issues.url` to it,
+  and hand Charlie the list of superseded file IDs to delete in one pass (he
+  deletes; you can't). Never leave the folder with two docs and no pointer to
+  which is canonical — `issues.url` is the tiebreaker.
+- Upload figures as their own files in the issue folder (svg/png), captioned and
+  source-credited; flag any image that still needs licensing.
+- When edit access does land (a Drive/Docs MCP exposing files.update or Docs
+  batchUpdate), switch to editing the ONE canonical doc in place and drop this
+  workaround.
+
 ## Step 4 — On Charlie's approval, prepare publication (Charlie posts; never auto-post)
 - LinkedIn (primary): the FULL teardown as a native text post (NOT a teaser),
   ending with a one-line subscribe CTA; the beehiiv link goes in the FIRST

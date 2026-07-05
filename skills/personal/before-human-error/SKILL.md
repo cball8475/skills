@@ -126,15 +126,17 @@ operating_guide so the next issue inherits it.
    investigators actually pulled — recorded process trends (temp/pressure/level),
    as-found hardware, chemistry/metallurgy, audit gaps — not a narrative-only
    causation. Give the reader concrete numbers and artifacts (Issue 3 standard).
-2. INVESTIGATIVE-TOOLS PASS. "How They Got Past Human Error" names at least one
-   concrete, transferable RCA method a practitioner already uses, and WORKS it on
-   this incident so the reader can reuse it — not "the investigators were
-   independent." Pick what fits and ROTATE across issues (don't repeat one tool
-   every time): 5 Whys, Ishikawa / fishbone (People, Methods/Procedures,
-   Equipment, Materials, Environment, Management), barrier analysis / bowtie,
-   causal tree / AcciMap, TapRooT, MORT, or Susca's hazard-gatekeeper lens
-   (operating_guide id 17). Show how the tool walks the reader OFF the operator
-   and up to the systemic decision.
+2. INVESTIGATIVE-TOOLS PASS. "How They Got Past Human Error" names and WORKS
+   ONE to THREE concrete, transferable RCA methods a practitioner already uses,
+   so the reader can reuse them — not "the investigators were independent." Use
+   as many as the incident actually earns: often ONE well-worked tool beats three
+   name-dropped ones, so don't force multiple. Pick from: 5 Whys, Ishikawa /
+   fishbone (People, Methods/Procedures, Equipment, Materials, Environment,
+   Management), barrier analysis / bowtie, causal tree / AcciMap, TapRooT, MORT,
+   or Susca's hazard-gatekeeper lens (operating_guide id 17). Across issues, vary
+   which tool leads — don't open with the same single method every time. Whatever
+   you pick, show it walking the reader OFF the operator and up to the systemic
+   decision.
 3. AUTHORITATIVE FIGURES. Include 1-3 figures from the investigation's OWN report
    (CSB/RC/NTSB), captioned with a source credit — never custom graphics Charlie
    has to approve (Issue 4 lesson). If the case is non-CSB and has no reusable

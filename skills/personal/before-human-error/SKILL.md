@@ -177,6 +177,12 @@ operating_guide so the next issue inherits it.
     fold — the reframe has to be visible before the reader clicks, not buried
     after the Cold Open's setup.
 
+GATE OUTPUT -> TRACKER. On completing the gate, create/update this issue's row in
+`article_tracker`: issue_number, publish_week, working_title, status, and the
+change ledger — `added` / `removed` / `improved` vs the prior issue — plus
+`gate_notes` for any item not YES. This row IS the continuous-improvement record;
+it makes each week's craft change visible and is the source for the Monday report.
+
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:
 - `Issue NN - <Title>` (ONE Google Doc) holding: Positioning Pass (internal) +
@@ -213,11 +219,40 @@ and you cannot remove old ones. To avoid a v1/v2/v3 trail:
 
 ## Step 5 — Buffer + logging
 - Keep 2-3 drafted ahead; if buffer <2 after this run, queue the next incident.
-- Log to D1 (issues, linkedin_posts, engaged_readers, project_state)
-  proactively — do not ask.
+- Log to D1 proactively — do not ask: `issues` (url/status/subject),
+  `linkedin_posts`, `engaged_readers`, `project_state`, `decision_log` (any
+  non-trivial call), and `article_tracker` (this issue's change-ledger row from
+  Step 2.5). Track any open pre-publish fix in `action_items`.
 
-## Companion: Monday report (separate scheduled session)
-Every Monday: growth (impressions, followers, subs, CTR), direction, and
-money/sponsorship recommendations, using the prior week's matured numbers.
-Needs Charlie's weekly LinkedIn analytics export; beehiiv sub counts pulled
-directly. Read `operating_guide` (monetization, growth) for context.
+## Step 5.5 — Post-publish metrics capture (each time Charlie shares an analytics export)
+Reach + engagement mature over ~5-7 days; capture them as they arrive.
+- Per reading, append a `post_snapshots` row (impressions, members_reached,
+  saves, comments, reposts, article_views, profile_viewers, followers_gained,
+  engagement_rate_pct, hours_since_post).
+- Update the issue's `article_tracker` row: `first_24h_impressions` (earliest
+  breakout signal); the LEADING set (`li_saves`/`li_comments`/`li_reposts`/
+  `li_article_views`/`li_profile_viewers`) and the LAGGING set (`lag_impressions`/
+  `lag_members_reached`/`lag_followers_gained`/`lag_engagement_rate_pct`/
+  `lag_new_subscribers`); plus `follows_per_1k`.
+- Judge with the LEADING vs LAGGING framework (operating_guide id 21): call a live
+  post on leading indicators within 24h; breakout bar = first-24h impressions
+  > ~10x current follower count OR > 25k absolute. Read viral mechanics in id 20.
+- VERIFY-BEFORE-ASSERT: a fresh export SUPERSEDES an earlier snapshot — correct
+  the stale number, don't stack it. Update `subscribers_status` (beehiiv +
+  LinkedIn newsletter) when it changes; flip resolved `action_items` to done.
+
+## Companion — Monday growth report (separate scheduled session; framework in operating_guide id 18)
+Drive it off the tables, not memory. Structure (matured prior-week numbers):
+(a) THE NUMBERS from `article_tracker` + latest `post_snapshots` +
+    `subscribers_status` — followers total/net, subscribers (beehiiv + LinkedIn
+    newsletter), and the week's LEADING + LAGGING split.
+(b) WHAT MOVED & WHY as hypotheses with sample size (never a rule off one post).
+(c) CONVERSION — `follows_per_1k` (and subs/1k) vs the running baseline; one
+    lever to test.
+(d) BREAKOUT RATE — count posts clearing the bar; note the `first_24h_impressions`
+    signal.
+(e) AUTHORITY/ally wins; (f) MONEY/sponsorship (from `sponsors`); (g) ONE decision
+    for the week + any open `action_items`.
+Inputs from Charlie weekly: follower total + beehiiv sub count + the aggregate
+export. Measure the COMPOUNDING assets (followers + subs + authority), NOT the
+volatile per-post reach.

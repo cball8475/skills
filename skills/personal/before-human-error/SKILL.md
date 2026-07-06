@@ -88,6 +88,34 @@ editorial scope — stage the source instead.
     location, final-report date, detail URL, csb_id) for picking the next
     incident and resolving its `report_path`.
 
+## Source diversification & the non-CSB investigation drill
+CSB is the reliable BACKBONE (it does the systemic root-cause analysis for you),
+but scope is global and the brand fits ANY operator-blame incident. When to widen:
+- Keep CSB as the default for the 2-3 issue BUFFER through ~issue 10-12 (until the
+  format + conversion are proven and the list is real). Branch OPPORTUNISTICALLY
+  before then only for a hot current event where the human-error narrative is
+  already loud and the crowd is already talking (a reach multiplier). After ~10
+  issues, deliberately mix in ~1-in-3/4 from OSHA / NIOSH FACE / international.
+- THE ONE GATING RULE: pick a non-CSB incident ONLY if you can get from the
+  human-error headline to a DOCUMENTED systemic cause with 2+ independent sources
+  WITHOUT assuming. If the public record is too thin, HOLD it — never speculate to
+  fill the gap. That discipline is the brand.
+THE DRILL (when no finished report hands you the systemic cause):
+1. Nail the easy story (headline / OSHA citation / news frame) = the Cold Open target.
+2. Pull primaries: OSHA establishment search (citations + inspection narrative),
+   NIOSH FACE, coroner/inquest, litigation/DOJ filings, HSE/TSB/royal-commission
+   reports, contemporaneous news naming investigators.
+3. READ THE OSHA CITATION AS THE SYSTEMIC MAP — the violated standard IS the
+   missing safeguard (no LOTO, no guarding, a missing PSM element). OSHA blames
+   the company by law; the systemic cause is right there in a different costume.
+4. Run the RCA tools yourself (Step 2.5 item 2 kit): 5 Whys, barrier analysis,
+   hazard-gatekeepers — walk from the operator's act up to the management decision.
+5. Find the near-miss (OSHA establishment history; "happened before" news lines).
+6. Hit the 2-source bar or HOLD. Anything uncorroborated = `[NEEDS INPUT]` or wait.
+Candidate pipeline lives in D1 `candidate_incidents` (name, human_blame_angle,
+systemic_cause_lead, sourceability, status). A weekly scout trigger refills it;
+promote a `ready`/`candidate` row to `incidents` when you pick it.
+
 ## Step 1 — Positioning Pass (GATE; output written at top of draft)
 Do not write the body until 1-3 are answered in writing.
 1. Incident coverage scan — who already told this story; the dominant "easy

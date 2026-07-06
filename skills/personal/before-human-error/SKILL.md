@@ -156,14 +156,26 @@ operating_guide so the next issue inherits it.
 6. LEADING-INDICATOR / NEAR-MISS BEAT. Surface the ignored precursor or near-miss
    as the hook, verified to the 2-source bar. (This is the Positioning Pass beat —
    make sure it survives into the BODY, not just the internal notes.)
-7. SIGNATURE ENGAGEMENT DEVICES. In-body save-the-checklist / ten-minute
-   toolbox-talk line (proven Issue 3); a closing comment-bait question ending
-   "...I read every one"; Monday Morning Checklist = exactly three specific,
-   actionable checks.
+7. SIGNATURE ENGAGEMENT DEVICES. Engineer for SAVES + COMMENTS specifically —
+   they are the amplified engagement types and signal reference value (Issue 3:
+   99 comments, 64 saves); do not chase raw likes. In-body save-the-checklist /
+   ten-minute toolbox-talk line (proven Issue 3); a closing comment-bait question
+   ending "...I read every one"; Monday Morning Checklist = exactly three
+   specific, actionable checks.
 8. DISTRIBUTION LOCKS. LinkedIn Newsletter CTA = "Subscribe here on LinkedIn"
    (locked Rev9); beehiiv link in the FIRST COMMENT only (pinned), selling the
    inbox-a-day-early upgrade; LinkedIn body == beehiiv body, identical; 2+
-   independent sources cited.
+   independent sources cited. Publish as a LinkedIn Article/Newsletter (its
+   auto-share is what carries the feed reach), business-morning Mon/Tue ~9am ET.
+9. TOPIC-FIT / ON-LANE. The incident is a process-safety teardown with an
+   operator-blame-reversal angle — the subject itself self-selects the ICP and is
+   the single biggest reach driver (on-topic broke out 2/2; an off-topic post
+   died at 314; Issue 3 reached O&G 25% / Chem Mfg 13%, PETRONAS/Shell/bp). Do
+   NOT drift off-lane for variety; vary the incident, not the beat.
+10. FEED-FIRST HOOK. The headline + first ~2 lines must land the curiosity-gap
+    reversal ("blamed the operator / the report didn't") ABOVE the "see more"
+    fold — the reframe has to be visible before the reader clicks, not buried
+    after the Cold Open's setup.
 
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:

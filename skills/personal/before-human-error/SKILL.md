@@ -162,11 +162,18 @@ operating_guide so the next issue inherits it.
    ten-minute toolbox-talk line (proven Issue 3); a closing comment-bait question
    ending "...I read every one"; Monday Morning Checklist = exactly three
    specific, actionable checks.
-8. DISTRIBUTION LOCKS. LinkedIn Newsletter CTA = "Subscribe here on LinkedIn"
-   (locked Rev9); beehiiv link in the FIRST COMMENT only (pinned), selling the
-   inbox-a-day-early upgrade; LinkedIn body == beehiiv body, identical; 2+
+8. DISTRIBUTION LOCKS. beehiiv EMAIL is the owned, exportable, sellable scoreboard
+   — capture it first; the LinkedIn-newsletter sub is a secondary, non-exportable
+   retention layer. The LinkedIn BODY stays OUTBOUND-LINK-FREE (a body link
+   suppresses the reach that feeds subs): use a NAMED, NO-LINK beehiiv CTA that
+   also states the lead-magnet offer ("the inbox version lives at Before Human
+   Error on beehiiv — subscribe and I'll send you the one-page checklist of every
+   teardown's Monday checks; link's in the first comment"). The pinned FIRST
+   COMMENT carries the actual beehiiv link + the lead-magnet offer — that is the
+   real conversion ask. Keep the "Subscribe here on LinkedIn" newsletter CTA as
+   the secondary on-platform ask. LinkedIn body == beehiiv body, identical; 2+
    independent sources cited. Publish as a LinkedIn Article/Newsletter (its
-   auto-share is what carries the feed reach), business-morning Mon/Tue ~9am ET.
+   auto-share carries the feed reach), business-morning Mon/Tue ~9am ET.
 9. TOPIC-FIT / ON-LANE. The incident is a process-safety teardown with an
    operator-blame-reversal angle — the subject itself self-selects the ICP and is
    the single biggest reach driver (on-topic broke out 2/2; an off-topic post
@@ -208,13 +215,16 @@ and you cannot remove old ones. To avoid a v1/v2/v3 trail:
   workaround.
 
 ## Step 4 — On Charlie's approval, prepare publication (Charlie posts; never auto-post)
-- LinkedIn (primary): the FULL teardown as a native text post (NOT a teaser),
-  ending with a one-line subscribe CTA; the beehiiv link goes in the FIRST
-  COMMENT, not the body (outbound links in the body suppress reach). Keep this
-  format until ~1,000 beehiiv subscribers (checkpoint at 500); see operating_guide
-  LinkedIn Posting Playbook. Do NOT claim "reach is solved."
-- beehiiv (secondary while list is tiny): prepare the post for Charlie to
-  schedule (no API; Charlie schedules and publishes).
+- LinkedIn (primary reach): the FULL teardown as a native Article/Newsletter.
+  Body ends with a NAMED, NO-LINK beehiiv CTA + the lead-magnet offer (no
+  outbound link in the body — it suppresses reach); the beehiiv link + lead
+  magnet go in the pinned FIRST COMMENT (the real conversion ask). Keep this
+  link-in-comment format until ~1,000 beehiiv subscribers (checkpoint at 500);
+  see operating_guide LinkedIn Posting Playbook. Do NOT claim "reach is solved."
+- beehiiv (the OWNED, monetizable list — capture-first priority): confirm the
+  subscribe page + a welcome automation that delivers the lead magnet, then
+  prepare the identical-body edition for Charlie to schedule (no API; Charlie
+  schedules and publishes).
 - Update `issues` (url, status) and `linkedin_posts` (planned row).
 
 ## Step 5 — Buffer + logging

@@ -202,6 +202,13 @@ operating_guide so the next issue inherits it.
    the secondary on-platform ask. LinkedIn body == beehiiv body, identical; 2+
    independent sources cited. Publish as a LinkedIn Article/Newsletter (its
    auto-share carries the feed reach), business-morning Mon/Tue ~9am ET.
+   [A/B TEST — OPEN as of Issue 5]: the "body stays link-free" rule is NOT settled.
+   Issue 4 = comment-link arm (LinkedIn does not track comment-link clicks; ~1 sub
+   / ~1,300 impr). Issue 5 = body-link arm (ONE tracked beehiiv link in the body,
+   right before the closing question). Decide the rule from
+   `article_tracker.cta_placement` + `subs_per_1k` vs `lag_impressions` (watch for
+   a reach tax on the body-link post) once both mature. Until then, do not treat
+   body-link-free as law.
 9. TOPIC-FIT / ON-LANE. The incident is a process-safety teardown with an
    operator-blame-reversal angle — the subject itself self-selects the ICP and is
    the single biggest reach driver (on-topic broke out 2/2; an off-topic post

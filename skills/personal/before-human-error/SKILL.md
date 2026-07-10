@@ -262,6 +262,21 @@ and you cannot remove old ones. To avoid a v1/v2/v3 trail:
   schedules and publishes).
 - Update `issues` (url, status) and `linkedin_posts` (planned row).
 
+### Cover image template (1200x675, every issue)
+Photo full-bleed, converted to BLACK & WHITE and darkened (bottom-up black scrim so
+the title stays legible). Keep this exact furniture every issue — the consistency
+IS the brand:
+- FIXED, top-left: a red accent tick (34x4 px, #B42318); then masthead
+  `BEFORE HUMAN ERROR` (monospace, letter-spaced, white); then the issue tag
+  `ISSUE N · INCIDENT TEARDOWN` (monospace, grey).
+- PER ISSUE, bottom-left: the TITLE (bold grotesque sans ~76px, white, 1-2 lines)
+  and a metadata line (monospace, uppercase, ` · ` separators):
+  `FACILITY · DD MON YYYY · N FATALITIES`.
+- Type: sans (Inter/Helvetica/Liberation) for the title; monospace for every
+  label. Accent #B42318 is the only color. Masthead always top-left, title always
+  bottom-left; only the issue number, title, facility, date, and fatality count
+  change. Match the interior figures' style: white/technical, one functional red.
+
 ## Step 5 — Buffer + logging
 - Keep 2-3 drafted ahead; if buffer <2 after this run, queue the next incident.
 - Log to D1 proactively — do not ask: `issues` (url/status/subject),

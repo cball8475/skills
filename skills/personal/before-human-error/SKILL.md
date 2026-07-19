@@ -88,6 +88,34 @@ editorial scope — stage the source instead.
     location, final-report date, detail URL, csb_id) for picking the next
     incident and resolving its `report_path`.
 
+## Source diversification & the non-CSB investigation drill
+CSB is the reliable BACKBONE (it does the systemic root-cause analysis for you),
+but scope is global and the brand fits ANY operator-blame incident. When to widen:
+- Keep CSB as the default for the 2-3 issue BUFFER through ~issue 10-12 (until the
+  format + conversion are proven and the list is real). Branch OPPORTUNISTICALLY
+  before then only for a hot current event where the human-error narrative is
+  already loud and the crowd is already talking (a reach multiplier). After ~10
+  issues, deliberately mix in ~1-in-3/4 from OSHA / NIOSH FACE / international.
+- THE ONE GATING RULE: pick a non-CSB incident ONLY if you can get from the
+  human-error headline to a DOCUMENTED systemic cause with 2+ independent sources
+  WITHOUT assuming. If the public record is too thin, HOLD it — never speculate to
+  fill the gap. That discipline is the brand.
+THE DRILL (when no finished report hands you the systemic cause):
+1. Nail the easy story (headline / OSHA citation / news frame) = the Cold Open target.
+2. Pull primaries: OSHA establishment search (citations + inspection narrative),
+   NIOSH FACE, coroner/inquest, litigation/DOJ filings, HSE/TSB/royal-commission
+   reports, contemporaneous news naming investigators.
+3. READ THE OSHA CITATION AS THE SYSTEMIC MAP — the violated standard IS the
+   missing safeguard (no LOTO, no guarding, a missing PSM element). OSHA blames
+   the company by law; the systemic cause is right there in a different costume.
+4. Run the RCA tools yourself (Step 2.5 item 2 kit): 5 Whys, barrier analysis,
+   hazard-gatekeepers — walk from the operator's act up to the management decision.
+5. Find the near-miss (OSHA establishment history; "happened before" news lines).
+6. Hit the 2-source bar or HOLD. Anything uncorroborated = `[NEEDS INPUT]` or wait.
+Candidate pipeline lives in D1 `candidate_incidents` (name, human_blame_angle,
+systemic_cause_lead, sourceability, status). A weekly scout trigger refills it;
+promote a `ready`/`candidate` row to `incidents` when you pick it.
+
 ## Step 1 — Positioning Pass (GATE; output written at top of draft)
 Do not write the body until 1-3 are answered in writing.
 1. Incident coverage scan — who already told this story; the dominant "easy
@@ -114,6 +142,89 @@ practitioner ("carry back to your own site"). De-AI discipline: no
 throat-clearing, no balanced-clause polish, no em-dash tics, no
 "it's not just X, it's Y" cadence.
 
+## Step 2.5 — CARRY-FORWARD LESSONS GATE (grade every draft before it goes to review)
+This is the continuous-improvement loop made executable (operating_guide id 13):
+every issue must be graded against what earlier issues taught, so quality
+compounds instead of resetting. Do NOT set status -> review until each box is YES
+or explicitly flagged to Charlie with a reason. When a new issue teaches a new
+lesson (a hook/format/tool that landed or flopped), ADD it here and log it to
+operating_guide so the next issue inherits it.
+
+1. DATA-TRAIL SPINE. "What Actually Set It Up" carries the specific evidence the
+   investigators actually pulled — recorded process trends (temp/pressure/level),
+   as-found hardware, chemistry/metallurgy, audit gaps — not a narrative-only
+   causation. Give the reader concrete numbers and artifacts (Issue 3 standard).
+2. INVESTIGATIVE-TOOLS PASS. "How They Got Past Human Error" names and WORKS
+   ONE to THREE concrete, transferable RCA methods a practitioner already uses,
+   so the reader can reuse them — not "the investigators were independent." Use
+   as many as the incident actually earns: often ONE well-worked tool beats three
+   name-dropped ones, so don't force multiple. Pick from: 5 Whys, Ishikawa /
+   fishbone (People, Methods/Procedures, Equipment, Materials, Environment,
+   Management), barrier analysis / bowtie, causal tree / AcciMap, TapRooT, MORT,
+   or Susca's hazard-gatekeeper lens (operating_guide id 17). Across issues, vary
+   which tool leads — don't open with the same single method every time. Whatever
+   you pick, show it walking the reader OFF the operator and up to the systemic
+   decision. Chains must be LINEAR — each answer becomes the subject of the next
+   question; don't skip a link (a lost flow has its own "why did it stop") and
+   don't branch into repeated "why not / why not". Validate a 5 Whys by reading it
+   BACKWARDS saying "therefore": if each step implies the one below it and it
+   still tracks, the chain is sound.
+3. AUTHORITATIVE FIGURES. Include 1-3 figures from the investigation's OWN report
+   (CSB/RC/NTSB), captioned with a source credit — never custom graphics Charlie
+   has to approve (Issue 4 lesson). If the case is non-CSB and has no reusable
+   figure, spec the best available image and flag it for sourcing; don't ship
+   figureless if a real one exists.
+4. CITE & TAG THE CANON (operating_guide id 16). Name/plan to tag the relevant
+   canon for THIS incident — Conklin, Dekker, Kerin, Hopkins, CCPS Beacon, plus
+   the primary investigation body. On non-US cases tag the regional canon (e.g.
+   Longford -> Hopkins + Kerin).
+5. FIRST-PERSON PRACTITIONER VOICE. At least two genuine "I / on your own site"
+   peer moments; concede the obvious before reframing; run the de-AI pass. Not
+   detached third person.
+6. LEADING-INDICATOR / NEAR-MISS BEAT. Surface the ignored precursor or near-miss
+   as the hook, verified to the 2-source bar. (This is the Positioning Pass beat —
+   make sure it survives into the BODY, not just the internal notes.)
+7. SIGNATURE ENGAGEMENT DEVICES. Engineer for SAVES + COMMENTS specifically —
+   they are the amplified engagement types and signal reference value (Issue 3:
+   99 comments, 64 saves); do not chase raw likes. In-body save-the-checklist /
+   ten-minute toolbox-talk line (proven Issue 3); a closing comment-bait question
+   ending "...I read every one"; Monday Morning Checklist = exactly three
+   specific, actionable checks.
+8. DISTRIBUTION LOCKS. beehiiv EMAIL is the owned, exportable, sellable scoreboard
+   — capture it first; the LinkedIn-newsletter sub is a secondary, non-exportable
+   retention layer. The LinkedIn BODY stays OUTBOUND-LINK-FREE (a body link
+   suppresses the reach that feeds subs): use a NAMED, NO-LINK beehiiv CTA that
+   also states the lead-magnet offer ("the inbox version lives at Before Human
+   Error on beehiiv — subscribe and I'll send you the one-page checklist of every
+   teardown's Monday checks; link's in the first comment"). The pinned FIRST
+   COMMENT carries the actual beehiiv link + the lead-magnet offer — that is the
+   real conversion ask. Keep the "Subscribe here on LinkedIn" newsletter CTA as
+   the secondary on-platform ask. LinkedIn body == beehiiv body, identical; 2+
+   independent sources cited. Publish as a LinkedIn Article/Newsletter (its
+   auto-share carries the feed reach), business-morning Mon/Tue ~9am ET.
+   [A/B TEST — OPEN as of Issue 5]: the "body stays link-free" rule is NOT settled.
+   Issue 4 = comment-link arm (LinkedIn does not track comment-link clicks; ~1 sub
+   / ~1,300 impr). Issue 5 = body-link arm (ONE tracked beehiiv link in the body,
+   right before the closing question). Decide the rule from
+   `article_tracker.cta_placement` + `subs_per_1k` vs `lag_impressions` (watch for
+   a reach tax on the body-link post) once both mature. Until then, do not treat
+   body-link-free as law.
+9. TOPIC-FIT / ON-LANE. The incident is a process-safety teardown with an
+   operator-blame-reversal angle — the subject itself self-selects the ICP and is
+   the single biggest reach driver (on-topic broke out 2/2; an off-topic post
+   died at 314; Issue 3 reached O&G 25% / Chem Mfg 13%, PETRONAS/Shell/bp). Do
+   NOT drift off-lane for variety; vary the incident, not the beat.
+10. FEED-FIRST HOOK. The headline + first ~2 lines must land the curiosity-gap
+    reversal ("blamed the operator / the report didn't") ABOVE the "see more"
+    fold — the reframe has to be visible before the reader clicks, not buried
+    after the Cold Open's setup.
+
+GATE OUTPUT -> TRACKER. On completing the gate, create/update this issue's row in
+`article_tracker`: issue_number, publish_week, working_title, status, and the
+change ledger — `added` / `removed` / `improved` vs the prior issue — plus
+`gate_notes` for any item not YES. This row IS the continuous-improvement record;
+it makes each week's craft change visible and is the source for the Monday report.
+
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:
 - `Issue NN - <Title>` (ONE Google Doc) holding: Positioning Pass (internal) +
@@ -122,23 +233,86 @@ Save to `Before Human Error / Issues / NN - Title /`:
 - `sources/` (primary report + corroborating sources), `figures/` (images).
 Then notify Charlie for review.
 
+### Drive handling until edit access exists (READ THIS before saving)
+The connected Google Drive tool can CREATE, read, copy and search files but has
+NO edit-in-place or delete operation. So you cannot revise a Doc after saving it
+and you cannot remove old ones. To avoid a v1/v2/v3 trail:
+- Write the COMPLETE, finalized content on the FIRST create — run the whole
+  Step 2.5 gate BEFORE saving, not after. Treat the first save as final.
+- If a revision is unavoidable, create the new doc, repoint `issues.url` to it,
+  and hand Charlie the list of superseded file IDs to delete in one pass (he
+  deletes; you can't). Never leave the folder with two docs and no pointer to
+  which is canonical — `issues.url` is the tiebreaker.
+- Upload figures as their own files in the issue folder (svg/png), captioned and
+  source-credited; flag any image that still needs licensing.
+- When edit access does land (a Drive/Docs MCP exposing files.update or Docs
+  batchUpdate), switch to editing the ONE canonical doc in place and drop this
+  workaround.
+
 ## Step 4 — On Charlie's approval, prepare publication (Charlie posts; never auto-post)
-- LinkedIn (primary): the FULL teardown as a native text post (NOT a teaser),
-  ending with a one-line subscribe CTA; the beehiiv link goes in the FIRST
-  COMMENT, not the body (outbound links in the body suppress reach). Keep this
-  format until ~1,000 beehiiv subscribers (checkpoint at 500); see operating_guide
-  LinkedIn Posting Playbook. Do NOT claim "reach is solved."
-- beehiiv (secondary while list is tiny): prepare the post for Charlie to
-  schedule (no API; Charlie schedules and publishes).
+- LinkedIn (primary reach): the FULL teardown as a native Article/Newsletter.
+  Body ends with a NAMED, NO-LINK beehiiv CTA + the lead-magnet offer (no
+  outbound link in the body — it suppresses reach); the beehiiv link + lead
+  magnet go in the pinned FIRST COMMENT (the real conversion ask). Keep this
+  link-in-comment format until ~1,000 beehiiv subscribers (checkpoint at 500);
+  see operating_guide LinkedIn Posting Playbook. Do NOT claim "reach is solved."
+- beehiiv (the OWNED, monetizable list — capture-first priority): confirm the
+  subscribe page + a welcome automation that delivers the lead magnet, then
+  prepare the identical-body edition for Charlie to schedule (no API; Charlie
+  schedules and publishes).
 - Update `issues` (url, status) and `linkedin_posts` (planned row).
+
+### Cover image template (1200x675, every issue)
+Photo full-bleed, converted to BLACK & WHITE and darkened (bottom-up black scrim so
+the title stays legible). Keep this exact furniture every issue — the consistency
+IS the brand:
+- FIXED, top-left: a red accent tick (34x4 px, #B42318); then masthead
+  `BEFORE HUMAN ERROR` (monospace, letter-spaced, white); then the issue tag
+  `ISSUE N · INCIDENT TEARDOWN` (monospace, grey).
+- PER ISSUE, bottom-left: the TITLE (bold grotesque sans ~76px, white, 1-2 lines)
+  and a metadata line (monospace, uppercase, ` · ` separators):
+  `FACILITY · DD MON YYYY · N FATALITIES`.
+- Type: sans (Inter/Helvetica/Liberation) for the title; monospace for every
+  label. Accent #B42318 is the only color. Masthead always top-left, title always
+  bottom-left; only the issue number, title, facility, date, and fatality count
+  change. Match the interior figures' style: white/technical, one functional red.
 
 ## Step 5 — Buffer + logging
 - Keep 2-3 drafted ahead; if buffer <2 after this run, queue the next incident.
-- Log to D1 (issues, linkedin_posts, engaged_readers, project_state)
-  proactively — do not ask.
+- Log to D1 proactively — do not ask: `issues` (url/status/subject),
+  `linkedin_posts`, `engaged_readers`, `project_state`, `decision_log` (any
+  non-trivial call), and `article_tracker` (this issue's change-ledger row from
+  Step 2.5). Track any open pre-publish fix in `action_items`.
 
-## Companion: Monday report (separate scheduled session)
-Every Monday: growth (impressions, followers, subs, CTR), direction, and
-money/sponsorship recommendations, using the prior week's matured numbers.
-Needs Charlie's weekly LinkedIn analytics export; beehiiv sub counts pulled
-directly. Read `operating_guide` (monetization, growth) for context.
+## Step 5.5 — Post-publish metrics capture (each time Charlie shares an analytics export)
+Reach + engagement mature over ~5-7 days; capture them as they arrive.
+- Per reading, append a `post_snapshots` row (impressions, members_reached,
+  saves, comments, reposts, article_views, profile_viewers, followers_gained,
+  engagement_rate_pct, hours_since_post).
+- Update the issue's `article_tracker` row: `first_24h_impressions` (earliest
+  breakout signal); the LEADING set (`li_saves`/`li_comments`/`li_reposts`/
+  `li_article_views`/`li_profile_viewers`) and the LAGGING set (`lag_impressions`/
+  `lag_members_reached`/`lag_followers_gained`/`lag_engagement_rate_pct`/
+  `lag_new_subscribers`); plus `follows_per_1k`.
+- Judge with the LEADING vs LAGGING framework (operating_guide id 21): call a live
+  post on leading indicators within 24h; breakout bar = first-24h impressions
+  > ~10x current follower count OR > 25k absolute. Read viral mechanics in id 20.
+- VERIFY-BEFORE-ASSERT: a fresh export SUPERSEDES an earlier snapshot — correct
+  the stale number, don't stack it. Update `subscribers_status` (beehiiv +
+  LinkedIn newsletter) when it changes; flip resolved `action_items` to done.
+
+## Companion — Monday growth report (separate scheduled session; framework in operating_guide id 18)
+Drive it off the tables, not memory. Structure (matured prior-week numbers):
+(a) THE NUMBERS from `article_tracker` + latest `post_snapshots` +
+    `subscribers_status` — followers total/net, subscribers (beehiiv + LinkedIn
+    newsletter), and the week's LEADING + LAGGING split.
+(b) WHAT MOVED & WHY as hypotheses with sample size (never a rule off one post).
+(c) CONVERSION — `follows_per_1k` (and subs/1k) vs the running baseline; one
+    lever to test.
+(d) BREAKOUT RATE — count posts clearing the bar; note the `first_24h_impressions`
+    signal.
+(e) AUTHORITY/ally wins; (f) MONEY/sponsorship (from `sponsors`); (g) ONE decision
+    for the week + any open `action_items`.
+Inputs from Charlie weekly: follower total + beehiiv sub count + the aggregate
+export. Measure the COMPOUNDING assets (followers + subs + authority), NOT the
+volatile per-post reach.

@@ -1,0 +1,17 @@
+# Enforces the CLAUDE.md bucket/README/plugin.json invariants on every push
+# and PR. Before this, the rules existed only as prose and drifted silently
+# (all four misc/ skills were absent from plugin.json with nothing to notice).
+name: Check repo invariants
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run invariant checks
+        run: bash scripts/check-invariants.sh

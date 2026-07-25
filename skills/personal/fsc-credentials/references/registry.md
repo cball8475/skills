@@ -99,6 +99,79 @@ d1-backup: var `RETENTION_DAYS`; bindings 5× D1 (`DB_EATON`, `DB_CRM`, `DB_FAMI
 `DB_BHE`, `DB_TINY`) + R2 `BACKUPS`.
 kb-search: var `EMBED_MODEL`; bindings `DB`, `AI`, `VEC` (Vectorize eaton-kb).
 
+### Full account sweep — all 16 workers (2026-07-25)
+
+Enumerated via `GET /accounts/{id}/workers/scripts/{name}/settings` (secret
+**names** only — values are never readable). This closes the coverage gap: the
+original audit documented 5 workers and called itself complete; the account has
+16, and the 11 unlisted ones held **undocumented credentials and two email
+providers nobody had recorded.**
+
+| Worker | Secrets (secret_text) | Secrets Store binding | Source in repo? |
+|---|---|---|---|
+| ball-family-api | — | — | no |
+| ball-family-ingest | — | — | no |
+| d1-backup | `API_TOKEN` | — | site-admin |
+| deal-or-no-deal | `ANTHROPIC_API_KEY` | — | no |
+| eaton-ehs-api | `ANTHROPIC_API_KEY`, `API_TOKEN`, `GITHUB_BACKUP_TOKEN`, `RESEND_API_KEY` | — | EATON |
+| email-reply-ingest | — | — | site-admin |
+| florence-auto-outreach-emails | `ADMIN_SECRET`, `CRM_API_TOKEN`, `CRM_API_URL`, `RESEND_API_KEY`, `SMOKE_TOKEN`, `UNSUB_SECRET` | — | **no** |
+| florence-crm-api | `API_TOKEN`, `GITHUB_TOKEN`, `GOOGLE_ADS_*` (×4), `MERCURY_WEBHOOK_SECRET`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | — | site-admin |
+| florence-dashboard-proxy | `CRM_API_TOKEN` | — | **no** |
+| florence-lead-capture | `CRM_API_TOKEN`, `GITHUB_TOKEN`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` | — | **no** |
+| florence-lead-followup | `BREVO_API_KEY` | — | **no** |
+| florence-outreach | `ANTHROPIC_API_KEY` | — | **no** |
+| florence-utm-inject | — | — | no |
+| fsc-api-canary | — | `CRM_TOKEN`→`CRM_API_TOKEN`, `EATON_TOKEN`→`EATON_TOKEN` | no |
+| kb-search | `API_TOKEN` | — | site-admin |
+| tiny-mountain-65c7 | `API_KEY`, `Github_PAT` | — | no |
+
+**What the sweep newly surfaced:**
+
+- **A third email provider.** `florence-lead-followup` holds `BREVO_API_KEY`
+  (Brevo/Sendinblue) — the stack was believed to be Resend-only, and the audit
+  even "corrected" the skill for mentioning other providers. Resend **and** Brevo
+  are both live. Undocumented.
+- **Two more Anthropic keys** — `deal-or-no-deal` and `florence-outreach`, each a
+  separate `ANTHROPIC_API_KEY` beyond eaton's.
+- **Four GitHub PATs across the account**, not two: `florence-crm-api.GITHUB_TOKEN`,
+  `florence-lead-capture.GITHUB_TOKEN`, `eaton-ehs-api.GITHUB_BACKUP_TOKEN`, and
+  `tiny-mountain-65c7.Github_PAT`.
+- **The MAILER target's secret set.** `florence-auto-outreach-emails` (the service
+  binding behind florence-crm-api's owner alerts) holds its own `RESEND_API_KEY`
+  plus `CRM_API_TOKEN`, `CRM_API_URL`, `ADMIN_SECRET`, `SMOKE_TOKEN`, `UNSUB_SECRET`.
+- **`florence-lead-capture` carries its own `GITHUB_TOKEN` and a full Twilio set**
+  (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`).
+- **`tiny-mountain-65c7`** — an unrecognized worker holding `API_KEY` + a GitHub PAT.
+  Identify or retire it.
+
+**florence-outreach resolved.** It holds only `ANTHROPIC_API_KEY` — no CRM bearer.
+The rotation table's ❓ for it resolves to "not a CRM-bearer consumer."
+
+### The CRM bearer lives in FOUR plain worker secrets + Secrets Store
+
+The shared bearer, by consumer:
+
+| Worker | How it holds the bearer |
+|---|---|
+| florence-crm-api | `API_TOKEN` — the value it validates inbound against |
+| florence-dashboard-proxy | `CRM_API_TOKEN` plain secret |
+| florence-lead-capture | `CRM_API_TOKEN` plain secret |
+| florence-auto-outreach-emails | `CRM_API_TOKEN` plain secret |
+| Secrets Store | `CRM_API_TOKEN` (read only by fsc-api-canary today, and the new fsc-dashboard) |
+| Netlify | `VITE_CRM_API_TOKEN` until C2 deletes the site |
+
+**`fsc-api-canary` is the one worker already reading the bearer from Secrets Store**
+(`CRM_TOKEN`→`CRM_API_TOKEN`), so it is the working migration precedent — the same
+pattern eaton-ehs-api uses for `AUTH_TOKEN`.
+
+Making "rotate here once" true requires each plain-secret consumer to read the
+Secrets Store binding instead, **and** florence-crm-api to validate inbound against
+it. Blocked on source: only florence-crm-api is in a repo. dashboard-proxy,
+lead-capture, and auto-outreach-emails have **no source in any of the five repos**,
+so migrating them means editing deployed bundles by hand — and lead-capture is the
+new-lead intake path. Not done. Options in `site-admin/docs/dashboard-deploy.md`.
+
 ### fsc-dashboard (cutover in flight — not yet live as of 2026-07-25)
 
 Serves the site-admin SPA and proxies its CRM calls so the bearer stays
@@ -137,7 +210,9 @@ deployed source 2026-07-25:
 | florence-crm-api | `env.API_TOKEN` plain worker secret (inbound guard). No Secrets Store usage in source or config | ❌ |
 | florence-dashboard-proxy | `` `Bearer ${env.CRM_API_TOKEN}` `` — plain interpolation ⇒ own worker secret | ❌ |
 | florence-lead-capture | same, POSTing to `/leads` | ❌ |
-| florence-outreach | unverified — check before rotating | ❓ |
+| florence-auto-outreach-emails | `CRM_API_TOKEN` plain secret (confirmed by sweep) | ❌ |
+| florence-outreach | **not a CRM consumer** — holds only `ANTHROPIC_API_KEY` | n/a |
+| fsc-api-canary | `env.CRM_TOKEN.get()` — real Secrets Store binding | ✅ |
 | fsc-dashboard | `await env.CRM_API_TOKEN.get()` — real binding | ✅ |
 
 A Secrets Store binding is an object requiring `await .get()`; interpolating one
@@ -266,30 +341,31 @@ RESEND_API_KEY=
 
 ## 5. Third-party accounts
 
-Anthropic · Resend (domain verified: florencescservices.com) · Google Cloud OAuth app
-(Ads + GSC scopes) · Twilio · Mercury (webhook) · GitHub PATs ×2 (crm `GITHUB_TOKEN`,
-eaton `GITHUB_BACKUP_TOKEN` — both expire, record the dates) · Netlify · Cloudflare
+Anthropic (≥3 keys: eaton, deal-or-no-deal, florence-outreach) · Resend (domain
+verified: florencescservices.com) · **Brevo** (`florence-lead-followup.BREVO_API_KEY`
+— a second live email provider, surfaced by the 16-worker sweep) · Google Cloud OAuth
+app (Ads + GSC scopes) · Twilio (used by crm-api **and** lead-capture) · Mercury
+(webhook) · **GitHub PATs ×4** (`florence-crm-api.GITHUB_TOKEN`,
+`florence-lead-capture.GITHUB_TOKEN`, `eaton-ehs-api.GITHUB_BACKUP_TOKEN`,
+`tiny-mountain-65c7.Github_PAT` — all expire, record the dates) · Netlify · Cloudflare
 (D1, R2, Vectorize, AI, Secrets Store) · StatiCrypt member password (⏳ who else holds
 it?).
 
-SendGrid, Stripe, and Wave are **not** part of this stack. Earlier versions of this
-skill routed to `dashboard.sendgrid.com` and put `SENDGRID_API_KEY` in the `.dev.vars`
-template; all email is Resend. Do not reintroduce them.
+Correction to an earlier version of this file: it stated the stack is "Resend-only"
+and told readers not to reintroduce other email providers. The sweep proved otherwise
+— **Brevo is live** in florence-lead-followup. Resend and Brevo coexist; do not remove
+either without checking what sends through it. (SendGrid, Stripe, and Wave still appear
+nowhere and should not be reintroduced.)
 
 ---
 
 ## 6. Open gaps
 
-- **Inventory is incomplete.** The Cloudflare account holds **16** workers; only 5 are
-  documented here or in `site-admin/docs/credential-audit.md`. Undocumented:
-  `florence-outreach`, `florence-auto-outreach-emails` (the `MAILER` target — holds a
-  working Resend key, confirmed sending 2026-07-24), `florence-lead-capture`,
-  `florence-lead-followup`, `florence-utm-inject`, `florence-dashboard-proxy` (404s on
-  every path — likely dead, retire it), `ball-family-api`, `ball-family-ingest`,
-  `fsc-api-canary`, `deal-or-no-deal`, `tiny-mountain-65c7`. Several send email or take
-  webhooks, so several hold secrets. `florence-auto-outreach-emails` has no source in
-  any of the five repos. `florence-dashboard-proxy` is slated for deletion as part of
-  the fsc-dashboard cutover — it was an unfinished attempt at the same proxy.
+- **Inventory now complete** — all 16 workers swept 2026-07-25 (see §1 "Full account
+  sweep"). Secret *names* are known for every worker; values are never readable. What
+  remains open is not coverage but follow-up: identify/retire `tiny-mountain-65c7`
+  (holds `API_KEY` + a GitHub PAT, purpose unknown), and document what
+  `deal-or-no-deal` and the `ball-family-*` workers are.
 - **`florence-health-check` does not exist.** A previous version of this skill carried
   standing `TWILIO_*` "NOT SET" flags for it. No such worker is in the account.
 - **`CLOUDFLARE_API_TOKEN` is not in the Claude Code cloud session env** — confirmed

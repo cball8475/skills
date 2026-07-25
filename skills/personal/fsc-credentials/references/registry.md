@@ -11,6 +11,14 @@ success. Names drift slowly, values drift silently. Look values up at the source
 Status legend: ✅ verified working · ⚠️ present but flagged · ❌ missing or broken ·
 ⏳ needs a dashboard check only Charlie can do
 
+**Reconcile against `site-admin/kb/fsc-memory.md` too.** It is a fourth memory layer
+(alongside the D1 `memory` table and git history) and it already contained facts the
+2026-07-25 audit re-derived from scratch — notably the 5-consumer CRM rotation SOP
+(recorded 2026-07-19) and an explicit standing action item: *"update the
+fsc-credentials skill registry; the CRM API Bearer it lists is dead."* That item was
+never actioned, which is exactly why the stale bearer was still being served a week
+later. Read it before auditing anything.
+
 ---
 
 ## 0. Non-secret identifiers (safe to reference inline)
@@ -104,8 +112,7 @@ kb-search: var `EMBED_MODEL`; bindings `DB`, `AI`, `VEC` (Vectorize eaton-kb).
 Enumerated via `GET /accounts/{id}/workers/scripts/{name}/settings` (secret
 **names** only — values are never readable). This closes the coverage gap: the
 original audit documented 5 workers and called itself complete; the account has
-16, and the 11 unlisted ones held **undocumented credentials and two email
-providers nobody had recorded.**
+16, and the 11 unlisted ones held **undocumented credentials nobody had recorded.**
 
 | Worker | Secrets (secret_text) | Secrets Store binding | Source in repo? |
 |---|---|---|---|
@@ -128,10 +135,9 @@ providers nobody had recorded.**
 
 **What the sweep newly surfaced:**
 
-- **A third email provider.** `florence-lead-followup` holds `BREVO_API_KEY`
-  (Brevo/Sendinblue) — the stack was believed to be Resend-only, and the audit
-  even "corrected" the skill for mentioning other providers. Resend **and** Brevo
-  are both live. Undocumented.
+- **A dead `BREVO_API_KEY`** on `florence-lead-followup`. Initially read as a live
+  second email provider; the deployed source disproved it (see §5) — the worker
+  sends only via `MAILER`/Resend. Delete the secret.
 - **Two more Anthropic keys** — `deal-or-no-deal` and `florence-outreach`, each a
   separate `ANTHROPIC_API_KEY` beyond eaton's.
 - **Four GitHub PATs across the account**, not two: `florence-crm-api.GITHUB_TOKEN`,
@@ -237,7 +243,14 @@ being served and bypasses Access — treat the exposure below as live until then
 
 ✅ No secrets, working. 22 `inbound_nonprospect` rows on 2026-07-25 (newest 15:01:24)
 prove the Email Routing rule targets this worker and D1 writes succeed.
-Var: `FORWARD_TO` (defaults to `cball8475@gmail.com`). Binding: `DB` (florence-crm).
+Var: `FORWARD_TO` — **actually set to `charlieflorencescservices@gmail.com`**, which
+is the inbox all business addresses forward to. The code *default* is
+`cball8475@gmail.com`, so reading the source alone gives the wrong inbox (per
+`site-admin/kb/fsc-memory.md` 2026-07-19). Binding: `DB` (florence-crm).
+
+`florence-lead-followup` also has `MANUAL_TRIGGER_TOKEN` referenced in code but **not
+set** as a secret, so its legacy query-token trigger path is dead; it falls through to
+bearer validation against the CRM `/auth/check` endpoint. Fails closed, so harmless.
 
 ---
 
@@ -351,11 +364,20 @@ app (Ads + GSC scopes) · Twilio (used by crm-api **and** lead-capture) · Mercu
 (D1, R2, Vectorize, AI, Secrets Store) · StatiCrypt member password (⏳ who else holds
 it?).
 
-Correction to an earlier version of this file: it stated the stack is "Resend-only"
-and told readers not to reintroduce other email providers. The sweep proved otherwise
-— **Brevo is live** in florence-lead-followup. Resend and Brevo coexist; do not remove
-either without checking what sends through it. (SendGrid, Stripe, and Wave still appear
-nowhere and should not be reintroduced.)
+**Brevo is DEAD — delete the key.** The sweep found `BREVO_API_KEY` on
+florence-lead-followup and this file briefly concluded Brevo was a live second
+provider. Reading the deployed source disproved that: florence-lead-followup v3.0.0
+sends **exclusively** through `env.MAILER` (→ florence-auto-outreach-emails → Resend)
+and never references Brevo. Charlie confirms Brevo was never adopted. The secret is a
+leftover from an earlier version and should be deleted from the worker.
+
+Lesson, and it is the same one that made the cached CRM bearer dangerous: **a secret's
+presence is not evidence of use.** Confirm against code before drawing a conclusion
+about what a credential does.
+
+Email is Resend-only, via the shared `MAILER` service binding on
+florence-auto-outreach-emails (used by florence-crm-api owner alerts *and*
+florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
 
 ---
 

@@ -13,22 +13,28 @@ Rotation dates belong in `registry.md`'s status column, not here.
 
 ## florence-crm-api `API_TOKEN` (the CRM bearer)
 
-⚠️ Read `registry.md` → "Known exposure" first. This token is currently published in
-the dashboard bundle. Rotating it without building the `/api` proxy just publishes the
-new value on the next Netlify build.
+⚠️ Read `registry.md` → "Known exposure" first, and check whether the fsc-dashboard
+cutover (`site-admin/docs/dashboard-deploy.md`) is finished — the procedure differs.
 
-Because the worker and the dashboard must agree, this is a two-place change:
+**After cutover** (Netlify deleted, fsc-dashboard live) — two places, no rebuild:
 
-1. New value → florence-crm-api: `npx wrangler secret put API_TOKEN --name florence-crm-api`
-2. Same value → Netlify → site-admin-fsc → Environment variables → `VITE_CRM_API_TOKEN`
-3. Redeploy the dashboard (Vite inlines at build time — an env change alone does
-   nothing). Push any commit to site-admin, or Deploys → Trigger deploy.
-4. Confirm: `curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer <new>" \
-   https://api.florencescservices.com/prospects` → 200, and no-auth → 401.
-5. Load the dashboard and confirm tiles populate.
+1. `npx wrangler secret put API_TOKEN --name florence-crm-api`
+2. `npx wrangler secrets-store secret update 80c48360a0e54dd69425da2dfbde21ad`
+   (secret `CRM_API_TOKEN`) — same value
+3. Confirm: dashboard tiles populate, and the **old** token now returns 401 against
+   `https://api.florencescservices.com/prospects`
 
-Once the proxy exists, step 2 becomes an unprefixed `CRM_API_TOKEN` and the dashboard
-stops carrying the token at all.
+No redeploy: the worker reads Secrets Store per request.
+
+**Before cutover** — the dashboard still carries the token, so it is three places and
+a rebuild, and the new value is published again on the next build. Prefer finishing
+the cutover to rotating in this state:
+
+1. `npx wrangler secret put API_TOKEN --name florence-crm-api`
+2. Netlify → site-admin-fsc → Environment variables → `VITE_CRM_API_TOKEN`
+3. Redeploy the dashboard — Vite inlines at build time, so an env change alone does
+   nothing
+4. Confirm with bearer → 200, without → 401, and that tiles populate
 
 ---
 

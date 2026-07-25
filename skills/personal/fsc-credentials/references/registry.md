@@ -96,6 +96,28 @@ d1-backup: var `RETENTION_DAYS`; bindings 5× D1 (`DB_EATON`, `DB_CRM`, `DB_FAMI
 `DB_BHE`, `DB_TINY`) + R2 `BACKUPS`.
 kb-search: var `EMBED_MODEL`; bindings `DB`, `AI`, `VEC` (Vectorize eaton-kb).
 
+### fsc-dashboard (cutover in flight — not yet live as of 2026-07-25)
+
+Serves the site-admin SPA and proxies its CRM calls so the bearer stays
+server-side. Replaces the Netlify-hosted dashboard. Config lives at the
+**site-admin repo root** `wrangler.toml` (not under `worker/`) because it serves
+this repo's `./dist` build output.
+
+| Secret | Location | Notes |
+|---|---|---|
+| `CRM_API_TOKEN` | Secrets Store, store `80c48360a0e54dd69425da2dfbde21ad` | Bound as `CRM_API_TOKEN`; read per-request via `await env.CRM_API_TOKEN.get()`, so a rotation applies with no redeploy |
+
+Vars: `CRM_ORIGIN` (`https://api.florencescservices.com`), `REQUIRE_ACCESS`
+(`"false"` until the Cloudflare Access policy is verified). Bindings: `ASSETS`.
+Route: `dashboard.florencescservices.com` (custom domain, DNS auto-created).
+
+The deploying `CLOUDFLARE_API_TOKEN` needs **Secrets Store (read)** in addition to
+Workers Scripts (edit), or every `/api` call returns 503.
+
+Cutover steps are in `site-admin/docs/dashboard-deploy.md`. Until step 7 of that
+runbook deletes the Netlify site, the old bundle with the embedded bearer is still
+being served and bypasses Access — treat the exposure below as live until then.
+
 ### email-reply-ingest
 
 ✅ No secrets, working. 22 `inbound_nonprospect` rows on 2026-07-25 (newest 15:01:24)
@@ -137,6 +159,12 @@ requires a redeploy.
 | `VITE_GOOGLE_PLACES_KEY` | ⚠️ set, `AIza…` key published in the bundle. Needs HTTP-referrer restriction |
 | `VITE_GITHUB_TOKEN` | ❌ **orphaned — delete it** |
 
+⚠️ **This whole section is being retired.** Once the fsc-dashboard cutover is done,
+the dashboard builds in GitHub Actions and deploys to Cloudflare, and Netlify holds
+nothing. Of these four, only `VITE_GOOGLE_PLACES_KEY` carries over — as a repo secret
+in site-admin, with its HTTP-referrer restriction moved to
+`dashboard.florencescservices.com`. The other three should not be recreated anywhere.
+
 `VITE_GITHUB_TOKEN` has zero references in `src/` and no PAT appears in the built
 bundle. Dashboard GitHub features go through the worker's `GITHUB_TOKEN` secret. A PAT
 inlined into a public bundle would be far worse than the CRM token; remove the variable
@@ -152,17 +180,25 @@ The CRM bearer is downloadable by anyone who loads
 pulled 200s from `/prospects`, `/ads/metrics`, `/seo/metrics`, `/gsc/metrics`.
 
 Rotating alone does not fix this — the replacement is re-published on the next build.
-The fix is two changes, in order:
 
-1. Move auth server-side: an `/api` proxy (Netlify Edge Function) reading an
-   **unprefixed** `CRM_API_TOKEN`, with all three call sites using relative `/api`.
-   `GoogleAdsTile.jsx` is already written against this shape. Note there is currently
-   **no** `netlify.toml` or `_redirects`, so `/api/*` 404s today.
-2. Put access control in front of the dashboard — Netlify reports
-   `requiresPassword: false`, so a proxy alone converts the leak into an
-   unauthenticated public API over the same data.
+**Fix is built, cutover pending:** the `fsc-dashboard` worker above serves the SPA
+and proxies `/api/*` with the bearer from Secrets Store, and Cloudflare Access gates
+the hostname. Prod is pinned to same-origin `/api` with no token in all three call
+sites, and the deploy workflow fails the build if a `VITE_*_TOKEN` is in the
+environment or a credential shape appears in `dist/`.
 
-Then rotate `API_TOKEN` + the Netlify var, since the current value is burned.
+Two things still make the exposure live until the runbook is finished:
+
+1. `site-admin-fsc.netlify.app` still answers and still serves the old bundle. It
+   also sits outside Cloudflare's edge, so Access cannot gate it. **Deleting it is
+   what actually closes the hole** — not deploying the replacement.
+2. The current bearer is burned and still valid. Rotate after the new path is
+   verified (runbook step 8).
+
+Root cause worth remembering: the client code was already correct — it fell back to
+`/api` and omitted the auth header when no token was set. Setting
+`VITE_CRM_API_URL` + `VITE_CRM_API_TOKEN` in Netlify overrode that. The lesson is
+that a `VITE_`-prefixed var is a publishing decision, not a configuration one.
 
 ---
 
@@ -212,7 +248,8 @@ template; all email is Resend. Do not reintroduce them.
   every path — likely dead, retire it), `ball-family-api`, `ball-family-ingest`,
   `fsc-api-canary`, `deal-or-no-deal`, `tiny-mountain-65c7`. Several send email or take
   webhooks, so several hold secrets. `florence-auto-outreach-emails` has no source in
-  any of the five repos.
+  any of the five repos. `florence-dashboard-proxy` is slated for deletion as part of
+  the fsc-dashboard cutover — it was an unfinished attempt at the same proxy.
 - **`florence-health-check` does not exist.** A previous version of this skill carried
   standing `TWILIO_*` "NOT SET" flags for it. No such worker is in the account.
 - **`CLOUDFLARE_API_TOKEN` is not in the Claude Code cloud session env** — confirmed

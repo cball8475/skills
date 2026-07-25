@@ -20,6 +20,9 @@ These appear in dashboard URLs and config files. They are not credentials.
 | Item | Value |
 |---|---|
 | Cloudflare Account ID | `37821191a8c1419e055c2c0a30546589` |
+| Zero Trust team domain | `https://florencesc.cloudflareaccess.com` |
+| Access app "FSC Dashboard" | id `f584791f-cc99-45f0-90f1-e750c2c5cb43`, AUD `8e44f1070780a22a9b34ffe5b4a087875b8de28eae1581ecefa4a503c87eaaee` (audience identifier, not a credential) |
+| Zone ID florencescservices.com | `10121f2f88ece5b5672f9ad366b56043` |
 | D1 — florence-crm | `50e1fc12-682d-4d58-8506-93687a10dc36` |
 | D1 — eaton-ehs-dashboard | `62ce85d7-0cc1-4832-aa57-d5b09ceaa132` |
 | Secrets Store (EATON_TOKEN) | store `80c48360a0e54dd69425da2dfbde21ad` |
@@ -119,8 +122,30 @@ a rotation sets both deliberately. Symptom of a mismatch: the dashboard returns 
 through the proxy — a 503 means the binding failed, a 401 means the bearer resolved
 but the CRM rejected it.
 
-Its comment says "Shared", which implies another consumer may bind it. Check the
-secret's bindings before rotating.
+Last modified **2026-07-03** — the only vintage signal available, since values are
+not readable.
+
+### ⚠️ "Rotate here once" does not work yet
+
+The secret's comment reads *"Shared FSC CRM bearer; guards florence-crm-api inbound
++ used by dashboard-proxy/lead-capture/outreach to call CRM. Rotate here once."*
+That is the intended design; the code does not implement it. Verified against
+deployed source 2026-07-25:
+
+| Worker | Mechanism | Reached by a Secrets Store rotation? |
+|---|---|---|
+| florence-crm-api | `env.API_TOKEN` plain worker secret (inbound guard). No Secrets Store usage in source or config | ❌ |
+| florence-dashboard-proxy | `` `Bearer ${env.CRM_API_TOKEN}` `` — plain interpolation ⇒ own worker secret | ❌ |
+| florence-lead-capture | same, POSTing to `/leads` | ❌ |
+| florence-outreach | unverified — check before rotating | ❓ |
+| fsc-dashboard | `await env.CRM_API_TOKEN.get()` — real binding | ✅ |
+
+A Secrets Store binding is an object requiring `await .get()`; interpolating one
+yields `[object Object]`, so those workers cannot be reading the shared copy — they
+hold duplicates. **A rotation today touches 5–6 places**, not one.
+
+To make the comment true, migrate every consumer *and* florence-crm-api's inbound
+guard onto the Secrets Store binding, the way eaton-ehs-api reads `AUTH_TOKEN`.
 
 Vars: `CRM_ORIGIN` (`https://api.florencescservices.com`), `REQUIRE_ACCESS`
 (`"false"` until the Cloudflare Access policy is verified). Bindings: `ASSETS`.
@@ -274,3 +299,42 @@ template; all email is Resend. Do not reintroduce them.
 - **EATON bearer is committed in plaintext** at `EATON/infra/env.sh`, duplicating the
   Secrets Store `EATON_TOKEN` and relying on manual sync. Git history retains it —
   treat as compromised and rotate, or accept and document.
+
+
+---
+
+## 7. Cloudflare API tokens (verified 2026-07-25)
+
+Two account-owned tokens exist, **both named "CF Master Token"**, both active,
+both expiring 2027-05-24:
+
+| id | last used | notes |
+|---|---|---|
+| `d2fbf2c3633f5c7951cae84b724cc62d` | 2026-07-25 | confirmed scopes include Secrets Store (read) + Workers |
+| `b3a2b3be40a7ac94f4c10cd09428c88b` | **never** | unused active credential — delete |
+
+Which one CI uses could not be determined: an account-owned token cannot enumerate
+user-owned tokens, so a third user-owned token may be the one in the site-admin repo
+secret.
+
+Recommended: create one least-privilege token — Workers Scripts (edit), Secrets
+Store (read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI — put it in the
+repo secret, and delete both "CF Master Token"s. A token named "master" is more
+authority than a dashboard deploy needs, and one of the two has never been used.
+
+## 8. Access / Zero Trust
+
+Org `florencesc.cloudflareaccess.com`. Identity providers: **One-time PIN only** —
+no Google, SAML, or OIDC. Sign-in therefore requires reading an emailed code.
+
+Applications: `FSC Dashboard` (dashboard.florencescservices.com, 24h, policy
+"Charlie only" → `charlie@florencescservices.com`), `eaton-ehs-cmd.pages.dev`,
+`*-florence-crm-api.cball8475.workers.dev`.
+
+⚠️ **Deliverability risk on the only allowed address.** Email Routing on
+`florencescservices.com` feeds the email-reply-ingest worker, which logs arrivals to
+D1 rather than a mailbox (104 `inbound_nonprospect` rows, latest 2026-07-25 16:24),
+and those rows include bounce senders whose VERP encodes
+`charlie=florencescservices.com`. If the one-time code cannot be read, the dashboard
+cannot be entered. Fixes: add a second include email that is definitely readable,
+add a forwarding rule ahead of the catch-all, or configure Google as an IdP.

@@ -105,7 +105,22 @@ this repo's `./dist` build output.
 
 | Secret | Location | Notes |
 |---|---|---|
-| `CRM_API_TOKEN` | Secrets Store, store `80c48360a0e54dd69425da2dfbde21ad` | Bound as `CRM_API_TOKEN`; read per-request via `await env.CRM_API_TOKEN.get()`, so a rotation applies with no redeploy |
+| `CRM_API_TOKEN` | Secrets Store, store `80c48360a0e54dd69425da2dfbde21ad` | ✅ **already exists** (confirmed 2026-07-25, comment "Shared FSC CRM…"). Bound as `CRM_API_TOKEN`; read per-request via `await env.CRM_API_TOKEN.get()`, so a rotation applies with no redeploy. ⚠️ **value vintage unverified** — see below |
+
+Store `80c48360a0e54dd69425da2dfbde21ad` contains exactly two secrets (2/100):
+`CRM_API_TOKEN` and `EATON_TOKEN`.
+
+⚠️ **The CRM bearer now exists in three places** — florence-crm-api's `API_TOKEN`
+worker secret, Netlify's `VITE_CRM_API_TOKEN`, and Secrets Store `CRM_API_TOKEN`.
+Secrets Store values cannot be read back, so there is no way to confirm the third
+matches the first without using it. Given that a fourth copy (cached in this skill)
+had already gone stale unnoticed, treat the Secrets Store copy as unverified until
+a rotation sets both deliberately. Symptom of a mismatch: the dashboard returns 401
+through the proxy — a 503 means the binding failed, a 401 means the bearer resolved
+but the CRM rejected it.
+
+Its comment says "Shared", which implies another consumer may bind it. Check the
+secret's bindings before rotating.
 
 Vars: `CRM_ORIGIN` (`https://api.florencescservices.com`), `REQUIRE_ACCESS`
 (`"false"` until the Cloudflare Access policy is verified). Bindings: `ASSETS`.

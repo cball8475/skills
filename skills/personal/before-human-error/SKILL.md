@@ -88,6 +88,24 @@ editorial scope — stage the source instead.
     location, final-report date, detail URL, csb_id) for picking the next
     incident and resolving its `report_path`.
 
+## Step 0.5 — INCIDENT SELECTION SCREEN (run before drafting; D1 `project_state.incident_selection_screen`)
+Do not assume the queued incident is still the right one. Grade the slotted
+incident against this screen AND the 10-item gate first; a slot that fails
+either is RE-PICKED, not rewritten. Derived from the n=4 breakout analysis
+(Issues 3 and 6 broke out; 4 and 5 did not).
+1. ORDINARY SANCTIONED TASK — was the victim doing something the reader has
+   personally done or authorized?
+2. LIVE BLAME STORY — is the operator-blame version still believed, or already
+   publicly demolished (BP Texas City, Macondo, Piper Alpha: no gap left)?
+3. UNDERSATURATED in LinkedIn EHS content.
+4. ICP MATCH — US, ideally Gulf Coast / Texas / Permian, chemical or O&G.
+5. PORTABLE MECHANISM the reader may be carrying right now.
+6. RCA-TOOL VARIETY vs the last two issues.
+7. 2+ independent sources, primary reachable.
+Hold as HYPOTHESIS, not law (n=4, with confounders on the record). Re-derive at
+10+ posts. Also reconcile the `issues`/`incidents` status pair for the slot
+before drafting; they drift.
+
 ## Step 1 — Positioning Pass (GATE; output written at top of draft)
 Do not write the body until 1-3 are answered in writing.
 1. Incident coverage scan — who already told this story; the dominant "easy

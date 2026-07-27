@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="2274" viewBox="0 0 1200 2274">
+<rect width="1200" height="2274" fill="#f7f7f4"/>
+<rect x="90" y="72" width="38" height="3" fill="#c0392b"/>
+<text x="90" y="108" font-family="Roboto Mono" font-size="13" letter-spacing="4.2" fill="#8b9199">BEFORE HUMAN ERROR</text>
+<text x="90" y="168" font-family="Inter" font-weight="600" font-size="46" fill="#14161a">The Process-Safety Teardown Checklist</text>
+<text x="90" y="206" font-family="Inter" font-size="21" fill="#3d434b">Twenty-one checks drawn from seven investigated disasters.</text>
+<text x="90" y="234" font-family="Inter" font-size="21" fill="#3d434b">Run them against your own site this week.</text>
+<line x1="90" y1="268" x2="1110" y2="268" stroke="#14161a" stroke-width="1.5"/>
+<text x="90" y="322" font-family="Roboto Mono" font-size="15" fill="#c0392b">01</text>
+<text x="216" y="322" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">Givaudan Sense Colour</text>
+<text x="216" y="348" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">LOUISVILLE, KY · 12 NOV 2024 · 2 FATALITIES · CSB 2024-06-I-KY</text>
+<text x="216" y="380" font-family="Inter" font-size="19" fill="#3d434b">The harmless-looking material nobody thought to reactivity-test.</text>
+<rect x="216" y="397" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="410" font-family="Inter" font-size="18.5" fill="#3d434b">Reactivity-test your low-hazard materials at real operating and upset conditions.</text>
+<rect x="216" y="431" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="444" font-family="Inter" font-size="18.5" fill="#3d434b">For anything that could run away, what scenario was the relief actually sized for?</text>
+<rect x="216" y="465" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="478" font-family="Inter" font-size="18.5" fill="#3d434b">Does your PSM effort chase the scary-sounding chemicals, or the truly reactive ones?</text>
+<line x1="90" y1="518" x2="1110" y2="518" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="558" font-family="Roboto Mono" font-size="15" fill="#c0392b">02</text>
+<text x="216" y="558" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">Formosa Plastics</text>
+<text x="216" y="584" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">ILLIOPOLIS, IL · 23 APR 2004 · 5 FATALITIES · CSB 2004-10-I-IL</text>
+<text x="216" y="616" font-family="Inter" font-size="19" fill="#3d434b">One bypassable procedure standing in for a real barrier.</text>
+<rect x="216" y="633" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="646" font-family="Inter" font-size="18.5" fill="#3d434b">Count the independent protection layers on your top three scenarios. One operator is not one.</text>
+<rect x="216" y="667" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="680" font-family="Inter" font-size="18.5" fill="#3d434b">Every bypassable interlock: is the bypass managed under MOC, or waved through by phone?</text>
+<rect x="216" y="701" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="714" font-family="Inter" font-size="18.5" fill="#3d434b">A near-miss at a sister site is your finding too, not “not applicable here.”</text>
+<line x1="90" y1="754" x2="1110" y2="754" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="794" font-family="Roboto Mono" font-size="15" fill="#c0392b">03</text>
+<text x="216" y="794" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">Bayer CropScience</text>
+<text x="216" y="820" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">INSTITUTE, WV · 28 AUG 2008 · 2 FATALITIES · CSB 2008-08-I-WV</text>
+<text x="216" y="852" font-family="Inter" font-size="19" fill="#3d434b">A startup pushed before the unit was ready to run.</text>
+<rect x="216" y="869" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="882" font-family="Inter" font-size="18.5" fill="#3d434b">Your last post-turnaround pre-startup review: performed and closed, or just signed?</text>
+<rect x="216" y="903" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="916" font-family="Inter" font-size="18.5" fill="#3d434b">New control interface: were operators proven competent before go-live, not during it?</text>
+<rect x="216" y="937" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="950" font-family="Inter" font-size="18.5" fill="#3d434b">Is the hardest, least-familiar work running on 60-hour weeks and 18-hour shifts?</text>
+<line x1="90" y1="990" x2="1110" y2="990" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="1030" font-family="Roboto Mono" font-size="15" fill="#c0392b">04</text>
+<text x="216" y="1030" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">BP Texas City Refinery</text>
+<text x="216" y="1056" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">TEXAS CITY, TX · 23 MAR 2005 · 15 FATALITIES · CSB 2005-04-I-TX</text>
+<text x="216" y="1088" font-family="Inter" font-size="19" fill="#3d434b">A low injury rate mistaken for a healthy process.</text>
+<rect x="216" y="1105" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1118" font-family="Inter" font-size="18.5" fill="#3d434b">Split your safety numbers. Can you name one process-safety metric you watch weekly?</text>
+<rect x="216" y="1139" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1152" font-family="Inter" font-size="18.5" fill="#3d434b">Your critical gauges: what is each one calibrated to see, and what is it blind to?</text>
+<rect x="216" y="1173" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1186" font-family="Inter" font-size="18.5" fill="#3d434b">Any relief or PHA study years overdue? That is a decision, not a backlog item.</text>
+<line x1="90" y1="1226" x2="1110" y2="1226" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="1266" font-family="Roboto Mono" font-size="15" fill="#c0392b">05</text>
+<text x="216" y="1266" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">Esso Longford Gas Plant</text>
+<text x="216" y="1292" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">LONGFORD, VICTORIA · 25 SEP 1998 · 2 FATALITIES · ROYAL COMMISSION</text>
+<text x="216" y="1324" font-family="Inter" font-size="19" fill="#3d434b">The people who understood the hazard had been moved off-site.</text>
+<rect x="216" y="1341" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1354" font-family="Inter" font-size="18.5" fill="#3d434b">Can your shift read the early sign of your worst failure mode, or was it never taught?</text>
+<rect x="216" y="1375" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1388" font-family="Inter" font-size="18.5" fill="#3d434b">Did your last engineering reorg get an MOC review, or pass as an org-chart change?</text>
+<rect x="216" y="1409" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1422" font-family="Inter" font-size="18.5" fill="#3d434b">Near-miss log and HAZOP schedule: is your worst unit's study done, or just planned?</text>
+<line x1="90" y1="1462" x2="1110" y2="1462" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="1502" font-family="Roboto Mono" font-size="15" fill="#c0392b">06</text>
+<text x="216" y="1502" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">DuPont La Porte</text>
+<text x="216" y="1528" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">LA PORTE, TX · 15 NOV 2014 · 4 FATALITIES · CSB 2015-01-I-TX</text>
+<text x="216" y="1560" font-family="Inter" font-size="19" fill="#3d434b">Every barrier already gone before the last valve was opened.</text>
+<rect x="216" y="1577" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1590" font-family="Inter" font-size="18.5" fill="#3d434b">Piping moved to clear a plug or restore flow: did that change ever get an MOC?</text>
+<rect x="216" y="1611" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1624" font-family="Inter" font-size="18.5" fill="#3d434b">Is your toxic-gas detection sized for toxicity, or borrowed from a flammability limit far above it?</text>
+<rect x="216" y="1645" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1658" font-family="Inter" font-size="18.5" fill="#3d434b">Count last month's alarms your crews treated as normal. That count is normalized deviance.</text>
+<line x1="90" y1="1698" x2="1110" y2="1698" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="1738" font-family="Roboto Mono" font-size="15" fill="#c0392b">07</text>
+<text x="216" y="1738" font-family="Inter" font-weight="600" font-size="25" fill="#14161a">Aghorn Operating</text>
+<text x="216" y="1764" font-family="Roboto Mono" font-size="11.5" letter-spacing="1.1" fill="#8b9199">ODESSA, TX · 26 OCT 2019 · 2 FATALITIES · CSB 2020-01-I-TX</text>
+<text x="216" y="1796" font-family="Inter" font-size="19" fill="#3d434b">A safety system that lived in one man's memory.</text>
+<rect x="216" y="1813" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1826" font-family="Inter" font-size="18.5" fill="#3d434b">Which alarms send a person into the hazard just to learn what the alarm means?</text>
+<rect x="216" y="1847" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1860" font-family="Inter" font-size="18.5" fill="#3d434b">Pull the calibration records for your toxic-gas detection. No records, no detection.</text>
+<rect x="216" y="1881" width="16" height="16" fill="none" stroke="#8b9199" stroke-width="1.2"/>
+<text x="248" y="1894" font-family="Inter" font-size="18.5" fill="#3d434b">Any energy-isolation step that is not written down is a program running on memory.</text>
+<rect x="90" y="1944" width="38" height="3" fill="#c0392b"/>
+<text x="90" y="1996" font-family="Inter" font-weight="600" font-size="27" fill="#14161a">Seven investigations. Seven headlines that blamed an operator.</text>
+<text x="90" y="2034" font-family="Inter" font-weight="600" font-size="27" fill="#14161a">Not one of them held up.</text>
+<line x1="90" y1="2092" x2="1110" y2="2092" stroke="#dfdfd9" stroke-width="1"/>
+<text x="90" y="2128" font-family="Inter" font-size="19" fill="#3d434b">A new incident teardown every week: the systemic cause behind the &#8220;operator error&#8221; headline.</text>
+<text x="90" y="2158" font-family="Inter" font-weight="600" font-size="19" fill="#14161a">Subscribe free &#183; before-human-error.beehiiv.com</text>
+<text x="90" y="2204" font-family="Roboto Mono" font-size="11.5" letter-spacing="0.6" fill="#8b9199">SOURCES: U.S. CHEMICAL SAFETY BOARD INVESTIGATION REPORTS; LONGFORD ROYAL COMMISSION (1999).</text>
+<text x="90" y="2226" font-family="Roboto Mono" font-size="11.5" letter-spacing="0.6" fill="#8b9199">BEFORE HUMAN ERROR &#183; PASS IT TO ONE PERSON WHO WOULD GET SOMETHING OUT OF IT.</text>
+</svg>

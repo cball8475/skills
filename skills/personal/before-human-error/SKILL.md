@@ -132,6 +132,40 @@ practitioner ("carry back to your own site"). De-AI discipline: no
 throat-clearing, no balanced-clause polish, no em-dash tics, no
 "it's not just X, it's Y" cadence.
 
+## Step 2.5 — GATE before status->review (mechanical first, judgement second)
+Grade in this order. A, B and C are RUN, not asserted. Do not mark any item
+YES from impression: Issue 7 shipped with "de-AI pass: YES" self-graded and
+had ZERO contractions in 3,045 words.
+
+**A. VOICE CHECK — mechanical, must pass.**
+```
+python3 voice-check/voice_check.py <body.txt>
+```
+Exits non-zero on failure. Thresholds: contractions >=6 per 1k words,
+triple-fragments <=1, paragraph-punch rate <=55%, connector phrases = 0,
+sentence-length stdev >=8. Fix the copy; never relax a threshold. Run it on
+the ARTICLE BODY ALONE (strip positioning pass and metadata) and again on the
+LinkedIn feed share. Issue 7 baseline for comparison: 0.0 contractions/1k
+(FAIL), 2 connectors (FAIL), 1 triple (pass), 14.3% punch rate (pass), stdev
+10.4 (pass) — the real defect was narrower than it felt, which is the point of
+measuring instead of eyeballing.
+
+**B. FIGURES BEFORE PROSE.** Pull every figure out of the report and LOOK at
+it before writing the paragraph that describes it. Issue 7's AcciMap section
+described five Rasmussen levels when the CSB diagram has four bands; it was
+caught only when the image was finally placed beside the text. No sentence
+describing a figure gets written with the figure unopened.
+
+**C. SOURCE-TRACE EVERY SPECIFIC.** For each concrete claim — numbers, quotes,
+"the CSB found X" — grep the primary source and point at the line. A detail
+that reads well and cannot be traced is a fabrication. Issue 7 Rev2 invented a
+beacon that "lit up perfectly" on a CSB test signal; it appears nowhere in the
+report and nearly shipped.
+
+**D. The 11-item Carry-Forward gate** (D1 `operating_guide`, "Carry-Forward
+Lessons Checklist"). The de-AI item and item 11 are now covered by A; the rest
+still need judgement.
+
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:
 - `Issue NN - <Title>` (ONE Google Doc) holding: Positioning Pass (internal) +

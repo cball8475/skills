@@ -1,5 +1,21 @@
 # FSC / EATON Credential Registry
 
+> 🔒 **`cball8475/skills` MUST REMAIN PRIVATE.** Confirmed decision, 2026-07-28.
+>
+> This file and `rotation-status.md` contain the complete secret inventory for all 16
+> Workers, the Access AUD and application id, Cloudflare API token ids, and a named
+> list of which credentials are currently exposed and where. All five *other* FSC/EATON
+> repos are public, and this material was deliberately moved here out of
+> `site-admin/docs/` for that reason.
+>
+> The `personal/` bucket is **not** a protection — per `CLAUDE.md` it only means "not
+> promoted in the plugin manifest." If this repo is ever made public, every file in it
+> is readable regardless of bucket.
+>
+> Before publishing this repo, or converting it to a shareable plugin, these reference
+> files must move to a dedicated private repo first. Do not assume the bucket, a
+> `.gitignore`, or the plugin manifest will keep them out of a public tree.
+
 **Verified by audit 2026-07-25.** Status column reflects what was actually tested that
 day, not what was assumed.
 

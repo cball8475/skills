@@ -90,6 +90,18 @@ Tell him exactly where to get it and where to put it — don't just say "go find
 - Twilio auth token — Twilio Console
 - Mercury credentials and webhook secret — mercury.com
 
+### Self-serve credentials — never ask Charlie to paste these
+
+- **EATON bearer** (2026-07-29+): D1 `app_config`, key `EATON_TOKEN`, db
+  `62ce85d7-0cc1-4832-aa57-d5b09ceaa132`. `EATON/infra/env.sh` resolves it
+  automatically (env var → `~/.fsc/eaton.token` → D1 fetch when
+  `CLOUDFLARE_API_TOKEN` exists). Cloud sessions without any of those: read the
+  row with Cloudflare MCP `d1_database_query`, write `~/.fsc/eaton.token`
+  (mode 600), source env.sh again. On 401 after a rotation:
+  `eaton_refresh_token`. Storing the bearer in D1 grants nothing new — D1
+  access already implies full data access — and `/export` enumerates its
+  tables, so backups never carry it.
+
 ---
 
 ## Step 3 — Set or rotate
@@ -108,8 +120,11 @@ half-works:
 
 - The CRM bearer must match across florence-crm-api `API_TOKEN` **and** Netlify
   `VITE_CRM_API_TOKEN` (plus a redeploy, since Vite inlines at build time).
-- The EATON bearer is duplicated across Secrets Store `EATON_TOKEN` **and**
-  `EATON/infra/env.sh` in plaintext.
+- The EATON bearer is a **four-place change** (Secrets Store `EATON_TOKEN`,
+  worker `API_TOKEN` fallback, D1 `app_config`, dashboard localStorage) — which
+  is why it is never rotated by hand: run the **Rotate EATON API token**
+  workflow in the EATON repo, which changes the first three atomically and
+  verifies the old value is dead (see rotation-sops).
 
 Tokens synced from repo secrets (`BACKUP_API_TOKEN`, `KB_API_TOKEN`) should be changed
 in GitHub and re-synced by re-running the workflow — not set on the worker by hand, or

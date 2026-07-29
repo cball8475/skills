@@ -80,7 +80,7 @@ entrypoint `Mailer`). Cron: `0 6 * * *` (SEO snapshot).
 
 | Secret | Status | Notes |
 |---|---|---|
-| `AUTH_TOKEN` (Secrets Store → `EATON_TOKEN`) | ✅ | Primary bearer. `/stats` 200 with, 401 without |
+| `AUTH_TOKEN` (Secrets Store → `EATON_TOKEN`) | ✅ rotated 2026-07-29 | Primary bearer. `/stats` 200 with, 401 without; leaked pre-07-28 value verified dead |
 | `API_TOKEN` | ⏳ | Fallback bearer; can't be isolated externally while Secrets Store works |
 | `ANTHROPIC_API_KEY` | ✅ | `/otter/extract` returned real structured tasks |
 | `RESEND_API_KEY` | ⚠️ indirect | `/digest/preview` 200, but preview builds without touching Resend. Confirm via Resend dashboard activity |
@@ -404,14 +404,15 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
   absent on both 2026-07-25 sessions, so `wrangler` cannot authenticate remotely.
   `EATON/infra/env.sh` claims every session exports it automatically; that comment is
   wrong.
-- **EATON bearer: leaked value still live until the rotation workflow runs.** The
-  plaintext copy was removed from `EATON/infra/env.sh` on 2026-07-28 (PR #7), but the
-  public repo's git history still serves the old value and it still authenticated on
-  2026-07-29. The removal alone also broke every cloud session (no distribution path
-  left) — fixed same day by the D1 `app_config` self-serve copy + env.sh resolution
-  chain. Remaining action: **run the Rotate EATON API token workflow once** (EATON
-  repo → Actions); its verify step proves the leaked value is dead. Until that first
-  green run, treat the bearer as compromised-and-live.
+- **EATON bearer leak — CLOSED 2026-07-29.** The plaintext copy was removed from
+  `EATON/infra/env.sh` on 2026-07-28 (PR #7), but git history kept serving the value
+  and it still authenticated on 07-29 — and the removal broke every cloud session
+  (no distribution path left). Same-day fix: D1 `app_config` self-serve copy +
+  env.sh resolution chain, then the **Rotate EATON API token** workflow run #1
+  (2026-07-29 01:13 UTC, green). Independently verified after the run: leaked
+  historical value → 401, rotated value from `app_config` → 200 end-to-end from a
+  cloud session. Residual: the git-history value is dead but the *pattern* stands —
+  any future commit of a secret restarts this clock.
 
 
 ---

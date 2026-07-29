@@ -161,6 +161,7 @@ Skills I use daily for code work.
 
 General workflow tools, not code-specific.
 
+- **[avoid-ai-writing](./skills/productivity/avoid-ai-writing/SKILL.md)** — Audit and rewrite content to strip AI writing patterns ("AI-isms"). Detect-only, rewrite, and edit-in-place modes, with optional voice profiles. Vendored from [conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) (MIT).
 - **[caveman](./skills/productivity/caveman/SKILL.md)** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping full technical accuracy.
 - **[grill-me](./skills/productivity/grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 - **[handoff](./skills/productivity/handoff/SKILL.md)** — Compact the current conversation into a handoff document so another agent can continue the work.

@@ -54,28 +54,22 @@ While here, the sweep found **four** GitHub PATs on the account
 `tiny-mountain-65c7.Github_PAT`). Record each one's expiry; rotate any that are
 shared or aging.
 
-## 3. EATON bearer — committed in git + pasted in chat
+## 3. EATON bearer — ✅ DONE 2026-07-29
 
-The EATON bearer was hardcoded in `EATON/infra/env.sh` (now removed, but retained
-in git history) and pasted in chat.
+Rotated by the **Rotate EATON API token** workflow (EATON repo), run #1,
+2026-07-29 01:13 UTC, green. It updated Secrets Store `EATON_TOKEN`, the
+`API_TOKEN` worker fallback, and the D1 `app_config` self-serve copy in one
+pass. Independently verified after the run: the leaked git-history value
+returns **401**, the rotated value returns **200** end-to-end from a session.
+`fsc-api-canary` needed nothing (reads Secrets Store). Future rotations: run
+the workflow, never rotate by hand (see rotation-sops).
 
-Consumers: `eaton-ehs-api` (validates Secrets Store `EATON_TOKEN` primary,
-`API_TOKEN` fallback), `fsc-api-canary` (reads Secrets Store `EATON_TOKEN` — will
-auto-pick-up), and your local shell via `~/.fsc/eaton.token`.
-
-1. Pick a new value.
-2. Set it in **both** places the worker checks, or the old one keeps working via
-   the fallback:
-   ```
-   npx wrangler secrets-store secret update 80c48360a0e54dd69425da2dfbde21ad   # EATON_TOKEN
-   npx wrangler secret put API_TOKEN --name eaton-ehs-api                       # same value
-   ```
-3. Put the same value in `~/.fsc/eaton.token` (mode 600) so `env.sh` and your
-   `eaton()` helper keep working. `fsc-api-canary` needs nothing — it reads
-   Secrets Store.
-4. Confirm `/stats` 200 with the new bearer, and that the **old** value now 401s.
-5. Optional but correct: scrub the value from git history
-   (`git filter-repo --replace-text`), since it lives in the original commit.
+Still open from the original item, both optional:
+- Local shells holding a pre-rotation `~/.fsc/eaton.token` will 401 until
+  `eaton_refresh_token` (env.sh re-fetches from D1 automatically when
+  `CLOUDFLARE_API_TOKEN` is present).
+- History scrub (`git filter-repo --replace-text`) is now cosmetic — the
+  published value is dead. Skip unless scrubbing anyway for item 5's reasons.
 
 ## 4. CRM bearer — public, and duplicated in six places
 

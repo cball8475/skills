@@ -57,18 +57,33 @@ snapshots. Use a health or preview endpoint.
 
 ---
 
-## Secrets-Store secrets (EATON bearer)
+## Secrets-Store secrets (EATON bearer) — automated 2026-07-29
 
-`EATON_TOKEN` lives in Cloudflare Secrets Store (store `80c48360a0e54dd69425da2dfbde21ad`)
-and is bound into eaton-ehs-api as `AUTH_TOKEN`. It is **duplicated in plaintext** at
-`EATON/infra/env.sh`, whose own comment requires manual sync.
+`EATON_TOKEN` lives in Cloudflare Secrets Store (store `80c48360a0e54dd69425da2dfbde21ad`),
+bound into eaton-ehs-api as `AUTH_TOKEN`, with the worker `API_TOKEN` secret as
+fallback and a session self-serve copy in D1 `app_config`. The plaintext copy in
+`EATON/infra/env.sh` was removed 2026-07-28 (PR #7) — but git history still serves
+that value publicly, so it must stay revoked.
 
-1. Update the Secrets Store value (dashboard → Secrets Store).
-2. Update `EATON/infra/env.sh` to match, or — preferred — remove the value from the file
-   and have it read from the environment, so the duplication ends.
-3. Confirm: `/stats` 200 with the new bearer, 401 without.
-4. Because the old value is in git history, treat any rotation here as a
-   compromise-response: the point is that the committed value stops being valid.
+**Do not rotate by hand.** EATON repo → Actions → **Rotate EATON API token** →
+Run workflow. One green run:
+
+1. mints a fresh 64-hex token (masked, never printed)
+2. updates Secrets Store `EATON_TOKEN` (worker reads it per-request — no redeploy)
+3. syncs the worker `API_TOKEN` fallback to the same value
+4. upserts D1 `app_config` key `EATON_TOKEN` (what sessions bootstrap from)
+5. fails unless `/stats` returns 200 with the new value AND 401 with the leaked
+   historical one (dug out of git history on the runner) — a green run IS the
+   compromise-response confirmation
+
+After a run: shells → `eaton_refresh_token` (from `EATON/infra/env.sh`);
+dashboard → DevTools `localStorage.removeItem('eaton_token')` → reload → it
+re-prompts. To read the new value yourself (local shell, never from chat):
+
+```bash
+npx wrangler d1 execute eaton-ehs-dashboard --remote \
+  --command "SELECT value FROM app_config WHERE key='EATON_TOKEN'"
+```
 
 ---
 

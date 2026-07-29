@@ -80,7 +80,7 @@ entrypoint `Mailer`). Cron: `0 6 * * *` (SEO snapshot).
 
 | Secret | Status | Notes |
 |---|---|---|
-| `AUTH_TOKEN` (Secrets Store → `EATON_TOKEN`) | ✅ | Primary bearer. `/stats` 200 with, 401 without |
+| `AUTH_TOKEN` (Secrets Store → `EATON_TOKEN`) | ✅ rotated 2026-07-29 | Primary bearer. `/stats` 200 with, 401 without; leaked pre-07-28 value verified dead |
 | `API_TOKEN` | ⏳ | Fallback bearer; can't be isolated externally while Secrets Store works |
 | `ANTHROPIC_API_KEY` | ✅ | `/otter/extract` returned real structured tasks |
 | `RESEND_API_KEY` | ⚠️ indirect | `/digest/preview` 200, but preview builds without touching Resend. Confirm via Resend dashboard activity |
@@ -89,7 +89,17 @@ entrypoint `Mailer`). Cron: `0 6 * * *` (SEO snapshot).
 Vars: `GIT_SHA` (verified — `/health` reported `7d64c90`, matching main),
 `DIGEST_FROM`, `DIGEST_TO`, `BACKUP_REPO`, `BACKUP_BRANCH`.
 Bindings: `DB`, `AI`, `VECTORIZE` (eaton-memory). Crons: `0 14 * * 5` (Friday digest),
-`0 12 * * 1` (Monday backup).
+`0 12 * * 1` (Monday backup). ⚠️ The Monday 2026-07-27 cron produced no backup
+commit; manual `/backup/run` on 07-29 pushed fine with the same PAT — cause
+unexplained, check for a `d1-export-2026-08-03` commit after the next run.
+
+**Bearer self-serve (2026-07-29):** D1 `app_config` key `EATON_TOKEN` (db
+`62ce85d7…`) carries the live bearer for sessions — `EATON/infra/env.sh` resolves
+it automatically; cloud sessions read it via Cloudflare MCP `d1_database_query`.
+Kept out of `/export`, so backups never contain it. Rotation is a workflow now —
+EATON repo → Actions → **Rotate EATON API token** — which updates Secrets Store +
+`API_TOKEN` fallback + `app_config` together and fails unless the leaked
+historical value is rejected. Do not rotate any of the three by hand.
 
 ### d1-backup / kb-search
 
@@ -394,9 +404,15 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
   absent on both 2026-07-25 sessions, so `wrangler` cannot authenticate remotely.
   `EATON/infra/env.sh` claims every session exports it automatically; that comment is
   wrong.
-- **EATON bearer is committed in plaintext** at `EATON/infra/env.sh`, duplicating the
-  Secrets Store `EATON_TOKEN` and relying on manual sync. Git history retains it —
-  treat as compromised and rotate, or accept and document.
+- **EATON bearer leak — CLOSED 2026-07-29.** The plaintext copy was removed from
+  `EATON/infra/env.sh` on 2026-07-28 (PR #7), but git history kept serving the value
+  and it still authenticated on 07-29 — and the removal broke every cloud session
+  (no distribution path left). Same-day fix: D1 `app_config` self-serve copy +
+  env.sh resolution chain, then the **Rotate EATON API token** workflow run #1
+  (2026-07-29 01:13 UTC, green). Independently verified after the run: leaked
+  historical value → 401, rotated value from `app_config` → 200 end-to-end from a
+  cloud session. Residual: the git-history value is dead but the *pattern* stands —
+  any future commit of a secret restarts this clock.
 
 
 ---

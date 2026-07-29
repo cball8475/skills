@@ -118,6 +118,19 @@ Do not write the body until 1-3 are answered in writing.
 5. Leading-indicator beat — the ignored near-miss / missed warning (the hook).
 6. Hook + subject — feed-teaser first two lines (hard curiosity gap) +
    "blamed X / the report said Y" subject line.
+7. Standards & recommendation follow-through — if the investigation issued
+   recommendations to standards bodies or regulators, look up the CURRENT
+   status of each one THIS RUN; never report them as-published. Most reports
+   are years old and already recapped everywhere, so the recommendation ledger
+   is usually the only part of the story still moving, and it answers the
+   reader's real question: did anything change, and does it reach me? (Issue 8:
+   API revised Std 599 in Oct 2025 and the CSB closed the recommendation in Jan
+   2026, but API expressly declined the subparagraphs covering EXISTING valves,
+   while ASME and VMA sat at initial open status — that check produced the
+   entire angle.) CSB status summaries: search "CSB recommendation status change
+   <report no> <recipient>", then curl the PDF. Statuses are changeable facts
+   under GUARDRAILS #1 — record the verification date in the sources block.
+   Full detail in operating_guide "Standards & recommendation follow-through".
 
 ## Step 2 — Draft (house structure)
 Cold Open -> How the Unit Worked -> What Happened -> The Easy Story ->
@@ -128,9 +141,20 @@ Vary the closing "you don't need X, you need Y" line so the template doesn't sho
 ### Voice
 First person, plain, declarative. Concede the obvious before reframing.
 Specific over abstract always (psig, deg F, lb, ft, dates). Reader = peer
-practitioner ("carry back to your own site"). De-AI discipline: no
-throat-clearing, no balanced-clause polish, no em-dash tics, no
-"it's not just X, it's Y" cadence.
+practitioner ("carry back to your own site").
+
+De-AI discipline — read operating_guide "De-AI pass v2" for the full list and
+check the draft against it before status->review. The concrete tells, in
+priority order: (1) USE CONTRACTIONS — didn't, wasn't, there's, that's; zero
+contractions is the single biggest tell and the cheapest fix. (2) The
+triple-fragment device ("Not behind schedule. Not incomplete. None.") once per
+piece, maximum. (3) Do not end every paragraph on a punch — let some land flat.
+(4) No summarize-then-label ("Here is what the investigation found"). (5) Kill
+connector throat-clearing: "here's the thing", "worth stopping on", "the part
+that matters". (6) Wilder sentence-length variance — a 45-word sentence, then a
+four-word one. (7) First person must be SPECIFIC to Charlie's own work, not
+generic-practitioner. Dosage and asymmetry, not elimination — the house voice
+broke out twice and the spine stays.
 
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:

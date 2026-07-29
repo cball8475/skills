@@ -143,18 +143,74 @@ First person, plain, declarative. Concede the obvious before reframing.
 Specific over abstract always (psig, deg F, lb, ft, dates). Reader = peer
 practitioner ("carry back to your own site").
 
-De-AI discipline — read operating_guide "De-AI pass v2" for the full list and
-check the draft against it before status->review. The concrete tells, in
-priority order: (1) USE CONTRACTIONS — didn't, wasn't, there's, that's; zero
-contractions is the single biggest tell and the cheapest fix. (2) The
-triple-fragment device ("Not behind schedule. Not incomplete. None.") once per
-piece, maximum. (3) Do not end every paragraph on a punch — let some land flat.
-(4) No summarize-then-label ("Here is what the investigation found"). (5) Kill
-connector throat-clearing: "here's the thing", "worth stopping on", "the part
-that matters". (6) Wilder sentence-length variance — a 45-word sentence, then a
-four-word one. (7) First person must be SPECIFIC to Charlie's own work, not
-generic-practitioner. Dosage and asymmetry, not elimination — the house voice
-broke out twice and the spine stays.
+De-AI discipline runs in two layers. Read operating_guide "De-AI pass v3" for
+the full reconciliation; the short version:
+
+LAYER 1 — the general detector: the `avoid-ai-writing` skill in
+`skills/productivity/avoid-ai-writing`. Run its P0 and P1 severity tiers over
+every draft (word-list violations, template phrases, chatbot artifacts, vague
+attributions, hedge-stacked predictions, significance inflation). It is the
+catalogue; do not restate it here.
+
+LAYER 2 — the house deltas, which is everything the general detector cannot
+know about this newsletter:
+1. USE CONTRACTIONS — didn't, wasn't, there's, that's. Zero contractions is the
+   single biggest tell and the cheapest fix (Issue 7 shipped with zero).
+2. The triple-fragment device ("Not behind schedule. Not incomplete. None.")
+   ONCE per piece, maximum. `avoid-ai-writing` independently reaches the same
+   rule under "manufactured punchlines and staccato drama": three or more
+   same-shape fragments in a row reads as a drumroll. Keep the one that earns
+   emphasis, fold the rest into ordinary sentences.
+3. Do not end every paragraph on a punch — let some land flat.
+4. No summarize-then-label ("Here is what the investigation found").
+5. Kill connector throat-clearing: "here's the thing", "worth stopping on",
+   "the part that matters".
+6. Wilder sentence-length variance — a 45-word sentence, then a four-word one.
+   Vary PARAGRAPH length the same way. Structure is the strongest detection
+   signal there is; fixing vocabulary while leaving metronomic rhythm changes
+   nothing.
+7. First person must be SPECIFIC to Charlie's own work, never
+   generic-practitioner. Related: no emotional flatline ("what struck me was")
+   — if a reaction is claimed, the writing around it has to earn it.
+
+THREE DELIBERATE DEVIATIONS from `avoid-ai-writing`, so nobody "fixes" them:
+- The Monday Morning Checklist is ALWAYS exactly three checks. That trips the
+  skill's "numbered list inflation" rule. It is a fixed franchise format, not
+  padding — but each check must be genuinely discrete, never one idea split to
+  reach three.
+- The closing comment-bait question stays. The skill's "rhetorical question
+  openers" rule is about stalling before a point; this is a CTA soliciting
+  replies, at the end, and it drives the comments the issues live on.
+- "Concede the obvious before reframing" is the house spine and superficially
+  resembles the skill's "false concession structure." The skill's real objection
+  is to concessions where both halves are vague. So the concession must name the
+  specific true thing ("They did.") and then turn.
+
+MEASURE, don't eyeball, the four checkable ones: `python3 check_voice.py
+<draft.md> --baseline <a published issue>`. House budgets are derived from what
+published issues actually do, not adopted blind: em dashes <=3.0/1,000 words
+(the skill says 1.0; published Issue 6 ran 3.24, Issue 8 landed 2.15), the
+15-25 word "robotic band" under 45% of sentences, sentence-length stdev >=8.
+IGNORE the skill's TTR floor of 0.40 — type-token ratio falls mechanically with
+length, and published Issue 6 measures 0.360 at 1,849 words, so it is a false
+positive at teardown length.
+
+Dosage and asymmetry, not elimination. The house voice broke out twice and the
+spine stays; `avoid-ai-writing` says the same thing under "over-polishing" —
+sanding out every irregularity pushes prose back TOWARD the AI profile.
+
+## Step 2.5 — Pre-review gate (operating_guide "Carry-Forward Lessons Checklist")
+Grade every draft against the 11-item carry-forward list before setting
+status->review. Run the de-AI pass above (both layers) and `check_voice.py`.
+
+Two writer-side structure tests from `avoid-ai-writing`, worth the two minutes:
+- RESHUFFLE IMMUNITY: can two body paragraphs swap without breaking the piece?
+  If order doesn't matter you wrote a list of points, not an argument that
+  builds. The teardown structure should make this impossible by construction —
+  if it isn't, a section is floating.
+- TREADMILL TEST: per paragraph, name the one fact, claim or turn it adds. If
+  there isn't one, cut it. Restating the premise in fresh words is the most
+  common way a teardown gets long without getting better.
 
 ## Step 3 — Save for review (ONE canonical doc)
 Save to `Before Human Error / Issues / NN - Title /`:

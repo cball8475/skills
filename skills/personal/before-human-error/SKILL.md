@@ -147,10 +147,10 @@ De-AI discipline runs in two layers. Read operating_guide "De-AI pass v3" for
 the full reconciliation; the short version:
 
 LAYER 1 — the general detector: the `avoid-ai-writing` skill in
-`skills/productivity/avoid-ai-writing`. Run its P0 and P1 severity tiers over
-every draft (word-list violations, template phrases, chatbot artifacts, vague
-attributions, hedge-stacked predictions, significance inflation). It is the
-catalogue; do not restate it here.
+`skills/productivity/avoid-ai-writing` (on `main` as of 2026-07-29). Run its P0
+and P1 severity tiers over every draft (word-list violations, template phrases,
+chatbot artifacts, vague attributions, hedge-stacked predictions, significance
+inflation). It is the catalogue; do not restate it here.
 
 LAYER 2 — the house deltas, which is everything the general detector cannot
 know about this newsletter:

@@ -21,6 +21,13 @@ EM_DASH_PER_1K_MAX = 3.0   # avoid-ai-writing says 1.0; published Issue 6 ran 3.
 ROBOTIC_BAND_MAX_PCT = 45  # share of sentences landing in the 15-25 word band
 SENT_STDEV_MIN = 8.0       # sentence-length spread; published Issue 6 ran 8.9
 
+# Short-form (a LinkedIn comment, a feed share) needs an absolute em-dash count,
+# not a rate. At 230 words a single em dash scores 4.3/1k and two score 8.6, so
+# the per-1k budget "fails" copy that is entirely reasonable. avoid-ai-writing's
+# linkedin profile allows 2 per post, so use that below the cutoff.
+SHORT_FORM_WORDS = 600
+SHORT_FORM_EM_DASH_MAX = 2
+
 
 def load(path):
     text = open(path, encoding="utf-8").read()
@@ -62,8 +69,13 @@ def report(m, label):
     def line(ok, text):
         print(f"  {'PASS' if ok else 'FLAG'}  {text}")
 
-    line(m["em_per_1k"] <= EM_DASH_PER_1K_MAX,
-         f"em dashes {m['em_count']} = {m['em_per_1k']:.2f}/1k (house max {EM_DASH_PER_1K_MAX})")
+    if m["words"] < SHORT_FORM_WORDS:
+        line(m["em_count"] <= SHORT_FORM_EM_DASH_MAX,
+             f"em dashes {m['em_count']} (short-form: max {SHORT_FORM_EM_DASH_MAX} absolute, "
+             f"per-1k is noise under {SHORT_FORM_WORDS} words)")
+    else:
+        line(m["em_per_1k"] <= EM_DASH_PER_1K_MAX,
+             f"em dashes {m['em_count']} = {m['em_per_1k']:.2f}/1k (house max {EM_DASH_PER_1K_MAX})")
     line(m["contractions"] > 0,
          f"contractions {m['contractions']} = {m['contractions_per_1k']:.1f}/1k "
          f"(zero is the single biggest AI tell; Issue 7 shipped with 0)")

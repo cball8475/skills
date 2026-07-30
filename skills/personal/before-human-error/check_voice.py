@@ -22,11 +22,16 @@ ROBOTIC_BAND_MAX_PCT = 45  # share of sentences landing in the 15-25 word band
 SENT_STDEV_MIN = 8.0       # sentence-length spread; published Issue 6 ran 8.9
 
 # Short-form (a LinkedIn comment, a feed share) needs an absolute em-dash count,
-# not a rate. At 230 words a single em dash scores 4.3/1k and two score 8.6, so
-# the per-1k budget "fails" copy that is entirely reasonable. avoid-ai-writing's
-# linkedin profile allows 2 per post, so use that below the cutoff.
+# not a rate: at 230 words a single em dash already scores 4.3/1k, so the per-1k
+# budget misfires on copy that is entirely reasonable.
+#
+# The allowance is ZERO, not the 2-per-post that avoid-ai-writing's linkedin
+# profile permits. Charlie's call, 2026-07-29, on a reply that had two: em dashes
+# are among the most recognizable AI tells and a comment is short enough that
+# commas, periods or a restructured clause always work instead. Rewriting that
+# reply without them raised sentence-length variance rather than hurting it.
 SHORT_FORM_WORDS = 600
-SHORT_FORM_EM_DASH_MAX = 2
+SHORT_FORM_EM_DASH_MAX = 0
 
 
 def load(path):

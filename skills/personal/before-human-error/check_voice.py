@@ -51,7 +51,14 @@ def measure(text):
     lens = [len(re.findall(r"[A-Za-z'’]+", s)) for s in sents]
     paras = [p for p in text.split("\n\n") if len(p.strip()) > 40]
     plens = [len(re.findall(r"[A-Za-z'’]+", p)) for p in paras] or [0]
-    contractions = len(re.findall(r"\b\w+['’](?:t|s|re|ve|ll|d|m)\b", text))
+    # Unambiguous contraction endings, plus an explicit list for the 's form.
+    # A bare \w+'s pattern counts possessives ("the CSB's findings") as
+    # contractions, which let a draft with ZERO real ones score as a pass —
+    # exactly the tell this check exists to catch.
+    contractions = len(re.findall(r"\b\w+['’](?:t|re|ve|ll|d|m)\b", text))
+    contractions += len(re.findall(
+        r"\b(?:it|that|there|what|he|she|here|let|who|this|one|nobody|"
+        r"somebody|everybody|nothing|something)['’]s\b", text, re.I))
     return {
         "words": n,
         "em_per_1k": text.count("—") / n * 1000,

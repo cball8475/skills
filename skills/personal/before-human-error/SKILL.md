@@ -154,8 +154,15 @@ inflation). It is the catalogue; do not restate it here.
 
 LAYER 2 — the house deltas, which is everything the general detector cannot
 know about this newsletter:
-1. USE CONTRACTIONS — didn't, wasn't, there's, that's. Zero contractions is the
-   single biggest tell and the cheapest fix (Issue 7 shipped with zero).
+1. CONTRACTIONS ARE A BAND: 6-10 per 1,000 words. Not "more is better." All
+   seven published issues average 0.7/1k and BOTH breakouts sit in that set
+   (0.5 and 3.3), so the near-absence of contractions is the house register,
+   not an AI artifact. The band sits deliberately above that baseline so
+   nothing reads as mechanically as Issue 7 (which shipped with zero), and far
+   below conversational. Correcting hard in the other direction took an Issue 8
+   draft to 21.9/1k, 31x the published mean. Measure it, don't eyeball it. When
+   expanding contractions, MASK QUOTED SPANS FIRST or a global replace will
+   rewrite verbatim source material.
 2. The triple-fragment device ("Not behind schedule. Not incomplete. None.")
    ONCE per piece, maximum. `avoid-ai-writing` independently reaches the same
    rule under "manufactured punchlines and staccato drama": three or more

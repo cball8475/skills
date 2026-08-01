@@ -26,6 +26,23 @@ EM_DASH_MAX_ABS = 0
 ROBOTIC_BAND_MAX_PCT = 45  # share of sentences landing in the 15-25 word band
 SENT_STDEV_MIN = 8.0       # sentence-length spread; published Issue 6 ran 8.9
 
+# Contractions are a BAND, not a floor. The old check only flagged zero, on the
+# strength of Issue 7 shipping with none across ~3,000 words. That was a rule
+# built from one observation, and it is wrong in the other direction.
+#
+# Measured across all seven published issues (2026-07-29): 0.0, 0.0, 0.5, 1.2,
+# 0.0, 3.3, 0.0 per 1,000 words. Mean 0.7. Both breakouts are in there at 0.5
+# and 3.3. The near-absence of contractions IS the house register, not an AI
+# artifact, and a first draft of Issue 8 corrected to 21.9/1k, which is 31x the
+# published mean and a different voice entirely.
+#
+# Charlie's call, 2026-07-29: target 6-10 per 1,000. Above his historical
+# baseline, so a piece never reads as mechanically as Issue 7 did, but nowhere
+# near conversational. Short conversational replies may legitimately sit above
+# this; long-form teardowns should not.
+CONTRACTIONS_PER_1K_MIN = 6.0
+CONTRACTIONS_PER_1K_MAX = 10.0
+
 SHORT_FORM_WORDS = 600  # retained: TTR guidance differs by length
 
 
@@ -79,9 +96,10 @@ def report(m, label):
     line(m["em_count"] <= EM_DASH_MAX_ABS,
          f"em dashes {m['em_count']} (house max {EM_DASH_MAX_ABS}, all lengths; "
          f"{m['em_per_1k']:.2f}/1k)")
-    line(m["contractions"] > 0,
+    line(CONTRACTIONS_PER_1K_MIN <= m["contractions_per_1k"] <= CONTRACTIONS_PER_1K_MAX,
          f"contractions {m['contractions']} = {m['contractions_per_1k']:.1f}/1k "
-         f"(zero is the single biggest AI tell; Issue 7 shipped with 0)")
+         f"(target {CONTRACTIONS_PER_1K_MIN:.0f}-{CONTRACTIONS_PER_1K_MAX:.0f}; "
+         f"published issues average 0.7, Issue 7 shipped 0)")
     line(m["robotic_band_pct"] <= ROBOTIC_BAND_MAX_PCT,
          f"sentences in the 15-25 word band: {m['robotic_band_pct']:.0f}% (max {ROBOTIC_BAND_MAX_PCT}%)")
     line(m["sent_stdev"] >= SENT_STDEV_MIN,

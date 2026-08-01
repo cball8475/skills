@@ -23,7 +23,18 @@ fi
 
 mkdir -p "$DEST"
 
-find "$REPO/skills" -name SKILL.md -not -path '*/node_modules/*' -not -path '*/deprecated/*' -print0 |
+# Extra skill roots can be passed as arguments, so skills kept outside this repo
+# (e.g. a private single-skill repo) still get linked alongside the ones here.
+ROOTS=("$REPO/skills")
+for extra in "$@"; do
+  if [ -d "$extra" ]; then
+    ROOTS+=("$extra")
+  else
+    echo "warning: skipping '$extra' (not a directory)" >&2
+  fi
+done
+
+find "${ROOTS[@]}" -name SKILL.md -not -path '*/node_modules/*' -not -path '*/deprecated/*' -print0 |
 while IFS= read -r -d '' skill_md; do
   src="$(dirname "$skill_md")"
   name="$(basename "$src")"

@@ -41,5 +41,5 @@ Skills live in bucket folders under `skills/`, one folder per skill, each contai
 ## Scripts
 
 - `scripts/check-invariants.sh` — the invariant checker above (requires `jq`).
-- `scripts/link-skills.sh` — symlinks every non-deprecated skill into `~/.claude/skills` for the local CLI.
+- `scripts/link-skills.sh` — symlinks every non-deprecated skill into `~/.claude/skills` for the local CLI. Takes optional extra root directories as arguments, for skills kept outside this repo.
 - `scripts/list-skills.sh` — lists every `SKILL.md` path in the repo.

@@ -69,18 +69,27 @@ def build_photo(path, exposure=1.0):
     return im
 
 
-def scrim(im):
+def scrim(im, masthead_bottom=148):
     """Dark at the masthead, light through the middle, heavy under the title.
 
-    232 alpha at the top falling to 82 by 22% height, 82 through the middle,
-    then ramping to 240 at the bottom so the title always reads.
+    232 alpha at the top, HELD until just past the masthead, then falling to 82,
+    82 through the middle, then ramping to 240 at the bottom.
+
+    Holding the top band matters: the issue line is grey #969696, and if the
+    fade begins above it the line lands on whatever the photo is doing and
+    disappears against anything bright. The original fixed 22% break assumed
+    spec-size type; larger type pushes the masthead into the fade.
     """
+    hold = (masthead_bottom + 12) / H
+    fade_end = hold + 0.12
     layer = Image.new("L", (1, H))
     px = layer.load()
     for y in range(H):
         f = y / H
-        if f < 0.22:
-            a = 232 + (82 - 232) * (f / 0.22)
+        if f < hold:
+            a = 232
+        elif f < fade_end:
+            a = 232 + (82 - 232) * ((f - hold) / (fade_end - hold))
         elif f < 0.55:
             a = 82
         else:
@@ -90,26 +99,54 @@ def scrim(im):
     return Image.composite(Image.new("RGB", (W, H), (0, 0, 0)), im, mask)
 
 
-def draw_card(photo_path, issue, title_lines, footer, exposure=1.0):
-    im = scrim(build_photo(photo_path, exposure))
+def draw_card(photo_path, issue, title_lines, footer, exposure=1.0, typescale=1.0):
+    """typescale multiplies every type size and its tracking.
+
+    The template's 12-17px mono was set for a card viewed at full width. These
+    covers are mostly seen as feed and inbox thumbnails, where that type is
+    unreadable. Scale the whole system together so proportions hold.
+    """
+    S = typescale
+    # Work out where the masthead ends so the scrim can hold dark beneath it.
+    rule_h_pre = max(4, round(4 * S))
+    word_px_pre = round(17 * S)
+    issue_px_pre = round(12 * S)
+    masthead_bottom = 58 + rule_h_pre + round(18 * S) + word_px_pre + round(11 * S) + issue_px_pre
+
+    im = scrim(build_photo(photo_path, exposure), masthead_bottom)
     d = ImageDraw.Draw(im)
 
-    d.rectangle([MARGIN, 58, MARGIN + 34, 58 + 4], fill=ACCENT)
+    rule_w = round(34 * S)
+    rule_h = max(4, round(4 * S))
+    d.rectangle([MARGIN, 58, MARGIN + rule_w, 58 + rule_h], fill=ACCENT)
 
-    f_word = ImageFont.truetype(MONO, 17)
-    tracked(d, (MARGIN, 80), "BEFORE HUMAN ERROR", f_word, WHITE, 5.2)
+    word_px = round(17 * S)
+    f_word = ImageFont.truetype(MONO, word_px)
+    word_y = 58 + rule_h + round(18 * S)
+    tracked(d, (MARGIN, word_y), "BEFORE HUMAN ERROR", f_word, WHITE, 5.2 * S)
 
-    f_issue = ImageFont.truetype(MONO, 12)
-    tracked(d, (MARGIN, 112), f"ISSUE {issue} · INCIDENT TEARDOWN", f_issue, GREY, 3.4)
+    issue_px = round(12 * S)
+    f_issue = ImageFont.truetype(MONO, issue_px)
+    issue_y = word_y + word_px + round(11 * S)
+    tracked(d, (MARGIN, issue_y), f"ISSUE {issue} · INCIDENT TEARDOWN", f_issue, GREY, 3.4 * S)
 
-    f_foot = ImageFont.truetype(MONO, 13)
-    foot_y = H - 46 - 13
-    tracked(d, (MARGIN, foot_y), footer, f_foot, GREY, 2.6)
+    foot_px = round(13 * S)
+    f_foot = ImageFont.truetype(MONO, foot_px)
+    foot_y = H - round(46 * S) - foot_px
+    tracked(d, (MARGIN, foot_y), footer, f_foot, GREY, 2.6 * S)
 
     # Title sits above the footer and stacks upward, Title Case, no period.
-    f_title = ImageFont.truetype(SANS_BOLD, 72)
-    line_h = int(72 * 1.06)
-    y = foot_y - 34 - line_h * len(title_lines)
+    # Shrink to fit rather than run off the canvas at large typescale.
+    title_px = round(72 * S)
+    avail = W - MARGIN * 2
+    while title_px > 24:
+        f_probe = ImageFont.truetype(SANS_BOLD, title_px)
+        if max(d.textlength(l, font=f_probe) for l in title_lines) <= avail:
+            break
+        title_px -= 2
+    f_title = ImageFont.truetype(SANS_BOLD, title_px)
+    line_h = int(title_px * 1.06)
+    y = foot_y - round(34 * S) - line_h * len(title_lines)
     for line in title_lines:
         d.text((MARGIN, y), line, font=f_title, fill=WHITE)
         y += line_h
@@ -134,10 +171,12 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--exposure", type=float, default=1.0,
                    help="brightness multiplier for dark source photos, e.g. 1.15")
+    p.add_argument("--typescale", type=float, default=1.0,
+                   help="scale all type and tracking; 1.0 is the original spec")
     a = p.parse_args()
 
     lines = [s.strip() for s in a.title.split("|")]
-    card = draw_card(a.photo, a.issue, lines, a.footer, a.exposure)
+    card = draw_card(a.photo, a.issue, lines, a.footer, a.exposure, a.typescale)
     card.save(f"{a.out}-1200x675.png")
     square(card).save(f"{a.out}-1000x1000.png")
     print(f"wrote {a.out}-1200x675.png and {a.out}-1000x1000.png")

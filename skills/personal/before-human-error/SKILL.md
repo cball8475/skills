@@ -6,9 +6,9 @@ description: >-
   Charlie says "write article #N": picks that incident, runs the mandatory
   Positioning Pass, drafts a multi-source fact-checked teardown in the house
   voice, runs the de-AI pass, saves ONE canonical doc to Google Drive for
-  review, and stages the LinkedIn (full post) + optional beehiiv publication.
-  Publishing is manual; Charlie supervises and posts. Maintains a 2-3 issue
-  buffer.
+  review, and stages the LinkedIn (full post) + beehiiv publication. Charlie
+  approves every issue; on his go Claude publishes it to beehiiv via the API,
+  while LinkedIn stays in Charlie's hands. Maintains a 2-3 issue buffer.
 ---
 
 # Before Human Error — weekly teardown pipeline
@@ -21,8 +21,25 @@ description: >-
   Posting Playbook, latest market scan). D1 is the source of truth and may be
   newer than this file.
 - TRIGGER: when Charlie says "write article #N", run this whole pipeline for
-  article N. Publishing is MANUAL — Charlie posts; this skill only drafts +
-  stages. Never publish or schedule anything yourself.
+  article N.
+- PUBLISHING (changed 2026-08-01, Charlie's call; supersedes "publishing is
+  manual"). The EDITORIAL gate is unchanged: Charlie approves the content of a
+  specific issue, every time. What changed is who performs the mechanics after
+  that approval.
+  - **beehiiv: Claude publishes.** Write endpoints are no longer plan-blocked
+    (verified 2026-08-01; `POST /posts` returns a 400 validation error, not the
+    old 403 SEND_API_NOT_ENTERPRISE_PLAN). Use `BEEHIIV_API_KEY` from the
+    environment. Publish or schedule ONLY the issue Charlie has approved, only
+    to pub_c14bc86a-5655-4f9d-884b-daf4c2091c34, and verify the live post after.
+  - **LinkedIn: still Charlie.** There is no LinkedIn API access in this
+    environment, so the Newsletter edition, the feed share and the pinned first
+    comment remain his hands. Nothing about this change touches that.
+  - Never publish an issue that has not been explicitly approved. "Approved"
+    means Charlie said so for that issue, not that the draft passed the gate.
+  - Deletion of posts is permitted for verified strays only, and only after
+    reading each one — the four cleaned up on 2026-08-01 were three CSS-only
+    blanks and a duplicate of published Issue 2. Read before deleting; a beehiiv
+    "New post" draft still reports ~900 words because the template CSS counts.
 - Cadence: WEEKLY, publish Tuesday. LinkedIn is the primary channel; beehiiv is
   secondary while the list is tiny. Keep a 2-3 issue buffer.
 - Charlie = approve, review & publish. Always explain the reasoning behind any
@@ -147,7 +164,7 @@ De-AI discipline runs in two layers. Read operating_guide "De-AI pass v3" for
 the full reconciliation; the short version:
 
 LAYER 1 — the general detector: the `avoid-ai-writing` skill in
-`skills/productivity/avoid-ai-writing` (on `main` as of 2026-07-29). Run its P0
+`skills/productivity/avoid-ai-writing` (on `main` as of 2026-08-01). Run its P0
 and P1 severity tiers over every draft (word-list violations, template phrases,
 chatbot artifacts, vague attributions, hedge-stacked predictions, significance
 inflation). It is the catalogue; do not restate it here.

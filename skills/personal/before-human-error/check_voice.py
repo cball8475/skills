@@ -17,7 +17,7 @@ import sys
 
 # House thresholds. Derived from measuring published issues, not adopted blind
 # from the avoid-ai-writing skill — see operating_guide "De-AI pass v3".
-# Charlie's standing call, 2026-07-29: "basically zero em dashes", all lengths.
+# Charlie's standing call, 2026-08-01: "basically zero em dashes", all lengths.
 # Superseded the earlier 3.0/1k budget that had been derived from published
 # Issue 6 (3.70/1k). Issue 8 went to zero with no loss: every one of the 19 in
 # the first draft became a comma, a colon or a period, and sentence-length
@@ -30,13 +30,13 @@ SENT_STDEV_MIN = 8.0       # sentence-length spread; published Issue 6 ran 8.9
 # strength of Issue 7 shipping with none across ~3,000 words. That was a rule
 # built from one observation, and it is wrong in the other direction.
 #
-# Measured across all seven published issues (2026-07-29): 0.0, 0.0, 0.5, 1.2,
+# Measured across all seven published issues (2026-08-01): 0.0, 0.0, 0.5, 1.2,
 # 0.0, 3.3, 0.0 per 1,000 words. Mean 0.7. Both breakouts are in there at 0.5
 # and 3.3. The near-absence of contractions IS the house register, not an AI
 # artifact, and a first draft of Issue 8 corrected to 21.9/1k, which is 31x the
 # published mean and a different voice entirely.
 #
-# Charlie's call, 2026-07-29: target 6-10 per 1,000. Above his historical
+# Charlie's call, 2026-08-01: target 6-10 per 1,000. Above his historical
 # baseline, so a piece never reads as mechanically as Issue 7 did, but nowhere
 # near conversational. Short conversational replies may legitimately sit above
 # this; long-form teardowns should not.

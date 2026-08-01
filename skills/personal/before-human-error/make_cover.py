@@ -49,7 +49,7 @@ def tracked_width(draw, text, font, tracking):
     return sum(draw.textlength(c, font=font) + tracking for c in text) - tracking
 
 
-def build_photo(path, exposure=1.0):
+def build_photo(path, exposure=1.0, saturation=0.0):
     """Full bleed, monochrome, contrast +15%, brightness -20% (per the spec).
 
     `exposure` multiplies the spec brightness for source photos that need
@@ -63,7 +63,7 @@ def build_photo(path, exposure=1.0):
     left = (im.width - W) // 2
     top = (im.height - H) // 2
     im = im.crop((left, top, left + W, top + H))
-    im = ImageEnhance.Color(im).enhance(0.0)
+    im = ImageEnhance.Color(im).enhance(saturation)
     im = ImageEnhance.Contrast(im).enhance(1.15)
     im = ImageEnhance.Brightness(im).enhance(0.80 * exposure)
     return im
@@ -99,7 +99,7 @@ def scrim(im, masthead_bottom=148):
     return Image.composite(Image.new("RGB", (W, H), (0, 0, 0)), im, mask)
 
 
-def draw_card(photo_path, issue, title_lines, footer, exposure=1.0, typescale=1.0):
+def draw_card(photo_path, issue, title_lines, footer, exposure=1.0, typescale=1.0, saturation=0.0):
     """typescale multiplies every type size and its tracking.
 
     The template's 12-17px mono was set for a card viewed at full width. These
@@ -113,7 +113,7 @@ def draw_card(photo_path, issue, title_lines, footer, exposure=1.0, typescale=1.
     issue_px_pre = round(12 * S)
     masthead_bottom = 58 + rule_h_pre + round(18 * S) + word_px_pre + round(11 * S) + issue_px_pre
 
-    im = scrim(build_photo(photo_path, exposure), masthead_bottom)
+    im = scrim(build_photo(photo_path, exposure, saturation), masthead_bottom)
     d = ImageDraw.Draw(im)
 
     rule_w = round(34 * S)
@@ -173,10 +173,12 @@ def main():
                    help="brightness multiplier for dark source photos, e.g. 1.15")
     p.add_argument("--typescale", type=float, default=1.0,
                    help="scale all type and tracking; 1.0 is the original spec")
+    p.add_argument("--saturation", type=float, default=0.0,
+                   help="0.0 is the era-C monochrome spec; 1.0 keeps full colour")
     a = p.parse_args()
 
     lines = [s.strip() for s in a.title.split("|")]
-    card = draw_card(a.photo, a.issue, lines, a.footer, a.exposure, a.typescale)
+    card = draw_card(a.photo, a.issue, lines, a.footer, a.exposure, a.typescale, a.saturation)
     card.save(f"{a.out}-1200x675.png")
     square(card).save(f"{a.out}-1000x1000.png")
     print(f"wrote {a.out}-1200x675.png and {a.out}-1000x1000.png")

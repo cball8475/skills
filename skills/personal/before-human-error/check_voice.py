@@ -17,21 +17,16 @@ import sys
 
 # House thresholds. Derived from measuring published issues, not adopted blind
 # from the avoid-ai-writing skill — see operating_guide "De-AI pass v3".
-EM_DASH_PER_1K_MAX = 3.0   # avoid-ai-writing says 1.0; published Issue 6 ran 3.24
+# Charlie's standing call, 2026-07-29: "basically zero em dashes", all lengths.
+# Superseded the earlier 3.0/1k budget that had been derived from published
+# Issue 6 (3.70/1k). Issue 8 went to zero with no loss: every one of the 19 in
+# the first draft became a comma, a colon or a period, and sentence-length
+# variance rose across the edits rather than falling.
+EM_DASH_MAX_ABS = 0
 ROBOTIC_BAND_MAX_PCT = 45  # share of sentences landing in the 15-25 word band
 SENT_STDEV_MIN = 8.0       # sentence-length spread; published Issue 6 ran 8.9
 
-# Short-form (a LinkedIn comment, a feed share) needs an absolute em-dash count,
-# not a rate: at 230 words a single em dash already scores 4.3/1k, so the per-1k
-# budget misfires on copy that is entirely reasonable.
-#
-# The allowance is ZERO, not the 2-per-post that avoid-ai-writing's linkedin
-# profile permits. Charlie's call, 2026-07-29, on a reply that had two: em dashes
-# are among the most recognizable AI tells and a comment is short enough that
-# commas, periods or a restructured clause always work instead. Rewriting that
-# reply without them raised sentence-length variance rather than hurting it.
-SHORT_FORM_WORDS = 600
-SHORT_FORM_EM_DASH_MAX = 0
+SHORT_FORM_WORDS = 600  # retained: TTR guidance differs by length
 
 
 def load(path):
@@ -81,13 +76,9 @@ def report(m, label):
     def line(ok, text):
         print(f"  {'PASS' if ok else 'FLAG'}  {text}")
 
-    if m["words"] < SHORT_FORM_WORDS:
-        line(m["em_count"] <= SHORT_FORM_EM_DASH_MAX,
-             f"em dashes {m['em_count']} (short-form: max {SHORT_FORM_EM_DASH_MAX} absolute, "
-             f"per-1k is noise under {SHORT_FORM_WORDS} words)")
-    else:
-        line(m["em_per_1k"] <= EM_DASH_PER_1K_MAX,
-             f"em dashes {m['em_count']} = {m['em_per_1k']:.2f}/1k (house max {EM_DASH_PER_1K_MAX})")
+    line(m["em_count"] <= EM_DASH_MAX_ABS,
+         f"em dashes {m['em_count']} (house max {EM_DASH_MAX_ABS}, all lengths; "
+         f"{m['em_per_1k']:.2f}/1k)")
     line(m["contractions"] > 0,
          f"contractions {m['contractions']} = {m['contractions_per_1k']:.1f}/1k "
          f"(zero is the single biggest AI tell; Issue 7 shipped with 0)")

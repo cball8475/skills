@@ -7,8 +7,8 @@ description: >-
   Positioning Pass, drafts a multi-source fact-checked teardown in the house
   voice, runs the de-AI pass, saves ONE canonical doc to Google Drive for
   review, and stages the LinkedIn (full post) + beehiiv publication. Charlie
-  approves every issue; on his go Claude publishes it to beehiiv via the API,
-  while LinkedIn stays in Charlie's hands. Maintains a 2-3 issue buffer.
+  approves every issue and posts it; the beehiiv API allows read and delete but
+  not create, so publishing stays manual. Maintains a 2-3 issue buffer.
 ---
 
 # Before Human Error — weekly teardown pipeline
@@ -26,11 +26,20 @@ description: >-
   manual"). The EDITORIAL gate is unchanged: Charlie approves the content of a
   specific issue, every time. What changed is who performs the mechanics after
   that approval.
-  - **beehiiv: Claude publishes.** Write endpoints are no longer plan-blocked
-    (verified 2026-08-01; `POST /posts` returns a 400 validation error, not the
-    old 403 SEND_API_NOT_ENTERPRISE_PLAN). Use `BEEHIIV_API_KEY` from the
-    environment. Publish or schedule ONLY the issue Charlie has approved, only
-    to pub_c14bc86a-5655-4f9d-884b-daf4c2091c34, and verify the live post after.
+  - **beehiiv: Charlie still pastes.** Creating or publishing a post via API is
+    NOT possible: `POST /posts` with a valid payload returns 403
+    SEND_API_NOT_ENTERPRISE_PLAN (retested 2026-08-01). Do not be fooled by an
+    empty-body probe returning 400 — schema validation runs before the plan
+    check, so `{}` proves nothing. Test capability with a payload that would
+    succeed if permitted. Claude's job stays: hand Charlie paste-ready body,
+    subject line, preview text and figures.
+  - **beehiiv API is still worth using for READ and DELETE**, via
+    `BEEHIIV_API_KEY`: GET posts/subscriptions/segments/custom_fields all work
+    (feeds `beehiiv_posts` and the Monday report), and DELETE /posts/{id}
+    returns 204, which is how stray drafts get cleaned up.
+  - Charlie's standing permission to have Claude publish on his approval is
+    recorded and takes effect the moment a capable path exists (an enterprise
+    plan, or some other authenticated route). It is not exercisable today.
   - **LinkedIn: still Charlie.** There is no LinkedIn API access in this
     environment, so the Newsletter edition, the feed share and the pinned first
     comment remain his hands. Nothing about this change touches that.

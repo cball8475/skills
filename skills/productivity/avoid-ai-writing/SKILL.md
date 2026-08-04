@@ -1,7 +1,7 @@
 ---
 name: avoid-ai-writing
 description: Audit and rewrite content to remove AI writing patterns ("AI-isms"). Use this skill when asked to "remove AI-isms," "clean up AI writing," "edit writing for AI patterns," "audit writing for AI tells," or "make this sound less like AI." Supports a detect-only mode, an edit-in-place mode for files, an optional voice profile (casual / professional / technical / warm / blunt), and an iterate-to-convergence pass.
-version: 3.18.0
+version: 3.19.0
 license: MIT
 compatibility: Any AI coding assistant that supports agentskills.io SKILL.md format (Claude Code, Cursor, VS Code Copilot, Hermes Agent, OpenHands, etc.) or OpenClaw. No external tools or APIs required.
 metadata:
@@ -161,6 +161,46 @@ Words are organized into three tiers based on how reliably they signal AI-genera
 
 **Construction carve-out:** `load-bearing` before a literal structural noun (`wall`, `beam`, `column`, `joist`, `truss`, `member`, `footing`, `slab`, `stud`, `partition`, `masonry`, `lintel`, `pier`, `rafter`, `girder`, `capacity`), optionally with one material or position adjective in between (`load-bearing structural wall`), is standard building terminology — don't flag. Abstract-capable nouns (`structure`, `element`, `frame`, `foundation`) are excluded on purpose, so "the load-bearing structure of his argument" still flags. Known gap: predicative use ("the wall is load-bearing") still flags — see issue #56.
 
+#### Personal Tier 1 — this fork's owner-specific bans
+
+This block is the canonical word list for Charlie Ball's writing, absorbed from the
+Communication Rules that used to be restated in `EATON/CLAUDE.md`. That file now
+mirrors this block and defers to it; when the two disagree, this block wins and the
+mirror gets updated. Everything here is **Tier 1 for this user**, including the six
+entries promoted out of Tier 2 and Tier 3, where the general rule would only flag them
+in a cluster or at density.
+
+| Replace | With | Note |
+|---|---|---|
+| supercharge | speed up, strengthen (or state the change) | |
+| unlock | open up, enable, make available | also **not** a valid replacement word anywhere in this skill |
+| elevate | improve, raise, strengthen | promoted from Tier 2 |
+| empower | enable, let, allow | promoted from Tier 2 |
+| facilitate / facilitates | enable, help, run | promoted from Tier 2 |
+| streamline | simplify, speed up | promoted from Tier 2 |
+| navigate / navigating *(metaphor)* | work through, handle, deal with | promoted from Tier 2; literal navigation is fine |
+| ecosystem *(metaphor)* | system, network, market | promoted from Tier 2; a literal ecosystem is fine |
+| innovative / innovation | (describe what is actually new) | promoted from Tier 3 |
+| space *(metaphor, "the EHS space")* | field, industry, area | literal space is fine |
+| bandwidth *(of people)* | time, capacity, headcount | literal network bandwidth is fine |
+| pain points | problems, complaints, what breaks | |
+| low-hanging fruit | the easy wins, what we can fix this week | |
+| actionable insights | findings, what to do next | `actionable` alone is already Tier 1 above |
+
+Marked *(metaphor)*, *(of people)*, and *(literal … is fine)* entries are
+context-dependent: a plain text scan cannot tell the two senses apart, so tooling
+should report them for human review rather than fail on them.
+
+**Openers, closers, and habits.** These carry over from the same source and are
+always-on for this user. Each maps to a rule already defined elsewhere in this file;
+the mapping is here so nothing depends on the general rule's default strictness.
+
+- Openers: "Certainly!", "Absolutely!", "Great question!", "Happy to help!", "I'd be delighted to" — see *Chatbot artifacts* and *Sycophantic tone*.
+- Closers: "I hope this helps!", "Let me know if you have any questions!", "Feel free to reach out!" — see *Chatbot artifacts*.
+- Restating the question before answering, or narrating what you are about to do instead of doing it — see *Acknowledgment loops* and *Reasoning chain artifacts*.
+- Over-bolding and unnecessary headers — see *Bold overuse* and *Excessive structure*, both at full strength regardless of context profile.
+- Excessive hedging — see *Hedging* and *Hedge-stacked predictions*, at full strength even in `technical-blog`, where the general rule relaxes them.
+
 #### Tier 2 — Flag when 2+ appear in the same paragraph
 
 These words are legitimate on their own. When two or more show up together, the paragraph likely needs a rewrite.
@@ -171,7 +211,7 @@ These words are legitimate on their own. When two or more show up together, the 
 | navigate / navigating | work through, handle, deal with |
 | foster | encourage, support, build |
 | elevate | improve, raise, strengthen |
-| unleash | release, enable, unlock |
+| unleash | release, enable, open up |
 | streamline | simplify, speed up |
 | empower | enable, let, allow |
 | bolster | support, strengthen, back up |

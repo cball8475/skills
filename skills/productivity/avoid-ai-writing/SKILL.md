@@ -186,6 +186,18 @@ in a cluster or at density.
 | pain points | problems, complaints, what breaks | |
 | low-hanging fruit | the easy wins, what we can fix this week | |
 | actionable insights | findings, what to do next | `actionable` alone is already Tier 1 above |
+| here's the turn | (cut — the sentence under it is the turn) | reader-steering frame, rejected 2026-08-05 |
+| here's the thing | (cut — state the thing) | same family |
+| the detail that stings most | (cut — name the detail) | emotional flatline, rejected 2026-08-05 |
+| hold onto that *(steering frame; literal "hold onto the rail" is fine)* | (cut, or "that's the…") | rejected 2026-08-05 |
+
+The last four are **phrases, not words**, and they came from Charlie rejecting them
+in a draft rather than from the general tables: "I don't speak like that." The
+general skill already covers the shapes under *Infomercial engagement hooks* and
+*Emotional flatline*, but only as prose rules a reader has to apply. Listing the
+literal phrases here makes them scannable, which is the whole point of the tables
+being the single source. Add to this block whenever a frame gets rejected in
+review; a rejection that is never written down gets rewritten next issue.
 
 Marked *(metaphor)*, *(of people)*, and *(literal … is fine)* entries are
 context-dependent: a plain text scan cannot tell the two senses apart, so tooling

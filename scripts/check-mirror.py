@@ -47,7 +47,9 @@ CLAUDE_MD_CANDIDATES = [
 TIER1_HEADING = "tier 1"
 PERSONAL_HEADING = "personal tier 1"
 
-MIRROR_RE = re.compile(r"^\*\*Banned words/phrases \(mirror\):\*\*\s*(.+)$", re.MULTILINE)
+# Any "**Banned <something> (mirror):**" line counts, so the mirror can be split
+# across several lines (words, steering frames) without this going blind to one.
+MIRROR_RE = re.compile(r"^\*\*Banned [^:*]*\(mirror\):\*\*\s*(.+)$", re.MULTILINE)
 TABLE_ROW_RE = re.compile(r"^\|(.+)\|\s*$")
 PARENTHETICAL_RE = re.compile(r"\([^)]*\)")
 
@@ -113,17 +115,18 @@ def parse_tables(skill_path):
 
 def parse_mirror(claude_md_path):
     text = claude_md_path.read_text(encoding="utf-8")
-    match = MIRROR_RE.search(text)
-    if not match:
+    matches = MIRROR_RE.findall(text)
+    if not matches:
         raise SystemExit(
-            "error: no '**Banned words/phrases (mirror):**' line in {}.\n"
+            "error: no '**Banned ... (mirror):**' line in {}.\n"
             "The mirror is what this check compares against; if it was renamed, "
             "update MIRROR_RE here too.".format(claude_md_path))
     entries = []
-    for raw in match.group(1).split(","):
-        variants = normalize(raw)
-        if variants:
-            entries.append((" ".join(raw.split()).strip(), variants[0]))
+    for line in matches:
+        for raw in line.split(","):
+            variants = normalize(raw)
+            if variants:
+                entries.append((" ".join(raw.split()).strip(), variants[0]))
     return entries
 
 

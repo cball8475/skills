@@ -23,6 +23,9 @@ Skills live in bucket folders under `skills/`, one folder per skill, each contai
 2. Skills in unpromoted buckets appear in **neither** the top-level `README.md` nor `plugin.json`.
 3. Every bucket `README.md` lists each skill in its bucket with a one-line description, with the skill name linked to its `SKILL.md`.
 4. Every `plugin.json` entry points at a directory that actually contains a `SKILL.md`.
+5. The banned-word mirror in `EATON/CLAUDE.md` matches the **Tier 1** and **Personal Tier 1** tables in `avoid-ai-writing`: every mirrored word is covered by the tables, and every Personal Tier 1 entry is mirrored.
+
+Invariant 5 is a **local** gate, not a CI one. EATON is a separate private repo and is not checked out in CI, so the check skips there with a notice. Run `bash scripts/check-invariants.sh` with both repos present before committing any change to those two tables — the mirror exists because `EATON/CLAUDE.md` is the only file a Claude session auto-loads, and a mirror nobody checks is exactly the drift the single source was meant to end.
 
 ## Adding, moving, or retiring a skill
 
@@ -41,5 +44,6 @@ Skills live in bucket folders under `skills/`, one folder per skill, each contai
 ## Scripts
 
 - `scripts/check-invariants.sh` — the invariant checker above (requires `jq`).
+- `scripts/check-mirror.py` — invariant 5 on its own. Finds `EATON/CLAUDE.md` via `--claude-md`, the `EATON_CLAUDE_MD` environment variable, or the usual sibling checkouts; skips with exit 0 when it finds none, or fails on that with `--require`.
 - `scripts/link-skills.sh` — symlinks every non-deprecated skill into `~/.claude/skills` for the local CLI. Takes optional extra root directories as arguments, for skills kept outside this repo.
 - `scripts/list-skills.sh` — lists every `SKILL.md` path in the repo.

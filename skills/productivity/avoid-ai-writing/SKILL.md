@@ -1,6 +1,6 @@
 ---
 name: avoid-ai-writing
-description: Audit and rewrite content to remove AI writing patterns ("AI-isms"). Use this skill when asked to "remove AI-isms," "clean up AI writing," "edit writing for AI patterns," "audit writing for AI tells," or "make this sound less like AI." Supports a detect-only mode, an edit-in-place mode for files, an optional voice profile (casual / professional / technical / warm / blunt), and an iterate-to-convergence pass.
+description: Audit and rewrite content to remove AI writing patterns ("AI-isms") and to match a requested voice. Use this skill when asked to "remove AI-isms," "clean up AI writing," "edit writing for AI patterns," "audit writing for AI tells," or "make this sound less like AI" — and equally for voice requests that never mention AI, like "rewrite this in a blunt voice for LinkedIn" or "match my voice, here's a sample of my writing." Supports a detect-only mode, an edit-in-place mode for files, a voice profile (casual / professional / technical / warm / blunt), a context (linkedin / blog / technical-blog / investor-email / docs / casual), and an iterate-to-convergence pass.
 version: 3.19.0
 license: MIT
 compatibility: Any AI coding assistant that supports agentskills.io SKILL.md format (Claude Code, Cursor, VS Code Copilot, Hermes Agent, OpenHands, etc.) or OpenClaw. No external tools or APIs required.

@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integration tests, or asks for test-first development.
+description: Test-driven development with red-green-refactor loop. Use when user wants to build a feature test-first, mentions "red-green-refactor", asks for test-first development, or wants integration tests written test-first. For an existing bug, use `diagnose` — it reproduces and minimises first, then writes the regression test before the fix.
 ---
 
 # Test-Driven Development
@@ -43,6 +43,8 @@ RIGHT (vertical):
 ## Workflow
 
 ### 1. Planning
+
+**Starting from a bug?** Use [`diagnose`](../diagnose/SKILL.md) instead. It reproduces and minimises first, then writes the regression test before the fix. Come back here if the fix turns into new behavior worth building test-first — the planning below assumes an interface that does not exist yet.
 
 When exploring the codebase, use the project's domain glossary so that test names and interface vocabulary match the project's language, and respect ADRs in the area you're touching.
 

@@ -1,6 +1,6 @@
 # Refactor Candidates
 
-After TDD cycle, look for:
+After all tests pass, look for:
 
 - **Duplication** → Extract function/class
 - **Long methods** → Break into private helpers (keep tests on public interface)

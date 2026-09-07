@@ -101,7 +101,7 @@ Two related sections cover narrower slices of the same move: *Transition phrases
 ```steering-frames
 # name :: regex (matched case-insensitively) :: example of the shape
 now-the-part        :: \bnow,? the (part|bit|thing|piece|detail) (that|where|which)\b :: Now the part that decides everything.
-section-announcer   :: (?:^|(?<=[.!?]\s))(now|then|next),?\s+(the|what|how|why)\b :: Now the hazard, and it is worth being precise.
+section-announcer   :: (?:^|(?<=[.!?]\s))(now|then|next),?\s+(?:for\s+|to\s+|on\s+|with\s+)?(the|what|how|why)\b :: Now for the exits. (Take a deep breath here.)
 reader-imperative   :: (?:^|(?<=[.!?]\s))(so\s+)?(read|re-?read|look at|consider|picture|watch|trace|follow|count)\s+(the|what|that|this|how|it|them)\b :: Read that again.
 sit-with-it         :: \b(sit with|stay with|dwell on|hold onto|hold on to|let that (sit|land|sink))\b :: Sit with the shape of that.
 ask-the-question    :: \bask the (obvious|right|real|hard|uncomfortable|next) question\b :: Ask the obvious question.

@@ -174,7 +174,7 @@ in a cluster or at density.
 |---|---|---|
 | supercharge | speed up, strengthen (or state the change) | |
 | unlock | open up, enable, make available | also **not** a valid replacement word anywhere in this skill |
-| elevate | improve, raise, strengthen | promoted from Tier 2 |
+| elevate *(metaphor, "elevate the brand")* | improve, raise, strengthen | promoted from Tier 2; literal height, as in "elevated surfaces", is fine |
 | empower | enable, let, allow | promoted from Tier 2 |
 | facilitate / facilitates | enable, help, run | promoted from Tier 2 |
 | streamline | simplify, speed up | promoted from Tier 2 |

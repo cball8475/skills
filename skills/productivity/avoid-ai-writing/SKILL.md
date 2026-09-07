@@ -1,7 +1,7 @@
 ---
 name: avoid-ai-writing
 description: Audit and rewrite content to remove AI writing patterns ("AI-isms") and to match a requested voice. Use this skill when asked to "remove AI-isms," "clean up AI writing," "edit writing for AI patterns," "audit writing for AI tells," or "make this sound less like AI" — and equally for voice requests that never mention AI, like "rewrite this in a blunt voice for LinkedIn" or "match my voice, here's a sample of my writing." Supports a detect-only mode, an edit-in-place mode for files, a voice profile (casual / professional / technical / warm / blunt), a context (linkedin / blog / technical-blog / investor-email / docs / casual), and an iterate-to-convergence pass.
-version: 3.19.0
+version: 3.20.0
 license: MIT
 compatibility: Any AI coding assistant that supports agentskills.io SKILL.md format (Claude Code, Cursor, VS Code Copilot, Hermes Agent, OpenHands, etc.) or OpenClaw. No external tools or APIs required.
 metadata:
@@ -82,6 +82,38 @@ In **edit** mode, your job is to:
 - **Hedging**: Cut `perhaps`, `could potentially`, `it's important to note that`, `to be clear`. Make the point directly.
 - **Missing bridge sentences**: Each paragraph should connect to the last. If paragraphs could be rearranged without the reader noticing, add connective tissue.
 - **Compulsive rule of three**: Vary groupings. Use two items, four items, or a full sentence instead of triads. Max one "adjective, adjective, and adjective" pattern per piece.
+
+### Reader-steering frames (shape, not phrase)
+
+A steering frame is a clause whose only job is to tell the reader that the next sentence matters: "Now the part that decides everything." "Read that again." "Sit with the shape of that." The sentence underneath is the point. The frame adds no fact, no claim and no turn — it announces one, which is a thing writers do when they are not confident the content will land on its own. Stacked a few times in a piece it is one of the clearest tells there is.
+
+**The rule is about the shape, not the wording: if a sentence's only job is to tell the reader that the next sentence is important, cut it.** Listing the phrasings does not work. Four literal frames were added to the Personal Tier 1 table on 2026-08-05 after they were rejected in review; the next draft avoided all four and used the same device nine more times in fresh wording. A revision can also put them back after they have been cut — one teardown went from two candidates at its third revision to six at its fifth, and passed its voice gate at exit 0 both times, because nothing was measuring this.
+
+Two related sections cover narrower slices of the same move: *Transition phrases to remove or rewrite* ("Here's what's interesting") and *Confidence calibration phrases* ("the real question is," "make no mistake"). This section is the general shape and the only one with a scannable pattern list.
+
+**Where the line falls on `section-announcer`, for this fork.** Charlie ruled on it 2026-09-07, over a draft carrying three: a bare `Then <topic>.` inside a sequence being walked in order is his voice and stays ("Then the ignition source."). `Now <topic>` is addressed to the reader rather than to the sequence, and goes ("Now the hazard," "Now what it did in engineering terms"). Any announcer carrying a trailing evaluation goes with it, and only the evaluation needs to — "Then the ignition source, and this one is almost unfair" lost its second clause and kept its first. The shape stays broad on purpose: `then` also opens ordinary narrative ("Then the notification and egress systems failed to empty a building they existed to protect"), which is a hit and not a frame.
+
+**Not every hit is a frame.** The same shape that produces "Read that again." also produces "Read the cause list again in order, though," which sends the reader back to a specific list to compare it against a second one. The first announces importance; the second gives an instruction with a payload. A text scan cannot tell them apart, so treat every hit as a **candidate** and decide it by hand. Keep the ones doing work, cut the rest, and write the decision down — a rejection that is never recorded gets rewritten next draft.
+
+**Machine-readable shapes.** Tooling reads the block below; it is the single home for these patterns, the same way the tables above are the single home for the banned words. Each line is `name :: regex :: example`, the regex is matched case-insensitively, and every example but one is a verbatim clause rejected in a real draft. Add a shape here whenever a frame is rejected in review and the existing patterns miss it — `section-announcer`, `narrate-the-reaction` and `verdict-lands` were added on 2026-09-07 for exactly that reason, after a draft that already passed the earlier shapes came back with "Now the hazard," "Then the ignition source, and this one is almost unfair," and "The finding lands on the shift that didn't sweep."
+
+
+```steering-frames
+# name :: regex (matched case-insensitively) :: example of the shape
+now-the-part        :: \bnow,? the (part|bit|thing|piece|detail) (that|where|which)\b :: Now the part that decides everything.
+section-announcer   :: (?:^|(?<=[.!?]\s))(now|then|next),?\s+(?:for\s+|to\s+|on\s+|with\s+)?(the|what|how|why)\b :: Now for the exits. (Take a deep breath here.)
+reader-imperative   :: (?:^|(?<=[.!?]\s))(so\s+)?(read|re-?read|look at|consider|picture|watch|trace|follow|count)\s+(the|what|that|this|how|it|them)\b :: Read that again.
+sit-with-it         :: \b(sit with|stay with|dwell on|hold onto|hold on to|let that (sit|land|sink))\b :: Sit with the shape of that.
+ask-the-question    :: \bask the (obvious|right|real|hard|uncomfortable|next) question\b :: Ask the obvious question.
+because-it-matters  :: \b(read|look at|notice)[^.\n]{0,60},\s*because\b :: Read the four conditions the report lists, because they aren't causes in the usual sense.
+here-is-the-x       :: \bhere(?:['’]s| is) the (move|thing|part|finding|point|one|kicker|catch|twist|detail)\b :: Here is the move worth stealing.
+put-it-on-a-wall    :: \b(put (it|that|this) on a wall|the (finding|line|sentence) I would|if you (remember|take) one thing)\b :: This is the finding I would put on a wall.
+now-set-that        :: (?:^|(?<=[.!?]\s))now\s+(set|put|hold|take|compare|line)\b :: Now set that against the casualty split.
+worth-a-verb        :: \bworth (a moment|\w+ing)\b :: Two of the five are worth sitting with.
+narrate-the-reaction :: \b(th(is|at) (one|part|bit) is (almost |nearly )?(unfair|brutal|grim|bleak|the worst|the hardest)|this is where it gets|and it gets worse|the hard(est)? part is)\b :: And this one is almost unfair.
+verdict-lands        :: \bthe (finding|blame|failure|lesson|answer|fix|conclusion) (lands|falls|sits|points) (on|to|at|back)\b :: The finding lands on the shift that didn't sweep.
+announce-importance :: \b(this is the (key|crucial|important)|what matters here is|the (important|real) (part|thing|question) is|pay attention to|notice what|make no mistake)\b :: What matters here is the calendar.
+```
 
 ### Words and phrases to replace
 
@@ -198,6 +230,14 @@ general skill already covers the shapes under *Infomercial engagement hooks* and
 literal phrases here makes them scannable, which is the whole point of the tables
 being the single source. Add to this block whenever a frame gets rejected in
 review; a rejection that is never written down gets rewritten next issue.
+
+Three of those four are steering frames, and the literal rows have not held: the
+draft after they were added avoided all four phrasings and ran the same device
+nine more times in new wording. Keep them — a literal hit is still the cheapest
+kind to catch — but the instrument that actually covers the family is the pattern
+block under *Reader-steering frames (shape, not phrase)* above. When a new frame
+gets rejected, add the phrase here **and** check whether a shape there already
+catches it; if none does, add one.
 
 Marked *(metaphor)*, *(of people)*, and *(literal … is fine)* entries are
 context-dependent: a plain text scan cannot tell the two senses apart, so tooling

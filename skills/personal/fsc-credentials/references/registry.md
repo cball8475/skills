@@ -114,7 +114,9 @@ unauthenticated, confirming they fail closed. An authenticated 200 was not run �
 repo-secret values are write-only.
 
 d1-backup: var `RETENTION_DAYS`; bindings 5× D1 (`DB_EATON`, `DB_CRM`, `DB_FAMILY`,
-`DB_BHE`, `DB_TINY`) + R2 `BACKUPS`.
+`DB_BHE`, `DB_TINY`) + R2 `BACKUPS`. `DB_TINY` is the live family backbone and
+`DB_FAMILY` the retained orphan — see §9, and do not infer the reverse from the
+binding names.
 kb-search: var `EMBED_MODEL`; bindings `DB`, `AI`, `VEC` (Vectorize eaton-kb).
 
 ### Full account sweep — all 16 workers (2026-07-25)
@@ -126,8 +128,8 @@ original audit documented 5 workers and called itself complete; the account has
 
 | Worker | Secrets (secret_text) | Secrets Store binding | Source in repo? |
 |---|---|---|---|
-| ball-family-api | — | — | no |
-| ball-family-ingest | — | — | no |
+| ball-family-api | — | — | ballyhofam-bot/tiny-mountain-65c7 † |
+| ball-family-ingest | — | — | ballyhofam-bot/tiny-mountain-65c7 † |
 | d1-backup | `API_TOKEN` | — | site-admin |
 | deal-or-no-deal | `ANTHROPIC_API_KEY` | — | no |
 | eaton-ehs-api | `ANTHROPIC_API_KEY`, `API_TOKEN`, `GITHUB_BACKUP_TOKEN`, `RESEND_API_KEY` | — | EATON |
@@ -141,7 +143,7 @@ original audit documented 5 workers and called itself complete; the account has
 | florence-utm-inject | — | — | no |
 | fsc-api-canary | — | `CRM_TOKEN`→`CRM_API_TOKEN`, `EATON_TOKEN`→`EATON_TOKEN` | no |
 | kb-search | `API_TOKEN` | — | site-admin |
-| tiny-mountain-65c7 | `API_KEY`, `Github_PAT` | — | no |
+| tiny-mountain-65c7 | `API_KEY`, `Github_PAT` | — | ballyhofam-bot/tiny-mountain-65c7 † |
 
 **What the sweep newly surfaced:**
 
@@ -158,8 +160,11 @@ original audit documented 5 workers and called itself complete; the account has
   plus `CRM_API_TOKEN`, `CRM_API_URL`, `ADMIN_SECRET`, `SMOKE_TOKEN`, `UNSUB_SECRET`.
 - **`florence-lead-capture` carries its own `GITHUB_TOKEN` and a full Twilio set**
   (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`).
-- **`tiny-mountain-65c7`** — an unrecognized worker holding `API_KEY` + a GitHub PAT.
-  Identify or retire it.
+- **`tiny-mountain-65c7`** — holds `API_KEY` + a GitHub PAT. **Identified 2026-09-12
+  (corrects the 2026-07-25 "unrecognized, identify or retire" call).** It is the
+  deliberate shared multi-domain backbone for the Ball household and the side
+  businesses — one D1, many workers — and its D1 `meta_config` documents itself.
+  **Do not retire it.** See §9.
 
 **florence-outreach resolved.** It holds only `ANTHROPIC_API_KEY` — no CRM bearer.
 The rotation table's ❓ for it resolves to "not a CRM-bearer consumer."
@@ -395,9 +400,9 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
 
 - **Inventory now complete** — all 16 workers swept 2026-07-25 (see §1 "Full account
   sweep"). Secret *names* are known for every worker; values are never readable. What
-  remains open is not coverage but follow-up: identify/retire `tiny-mountain-65c7`
-  (holds `API_KEY` + a GitHub PAT, purpose unknown), and document what
-  `deal-or-no-deal` and the `ball-family-*` workers are.
+  remains open is not coverage but follow-up: document what `deal-or-no-deal` is.
+  `tiny-mountain-65c7` and the `ball-family-*` workers were identified 2026-09-12 —
+  see §9.
 - **`florence-health-check` does not exist.** A previous version of this skill carried
   standing `TWILIO_*` "NOT SET" flags for it. No such worker is in the account.
 - **`CLOUDFLARE_API_TOKEN` is not in the Claude Code cloud session env** — confirmed
@@ -452,3 +457,59 @@ and those rows include bounce senders whose VERP encodes
 `charlie=florencescservices.com`. If the one-time code cannot be read, the dashboard
 cannot be entered. Fixes: add a second include email that is definitely readable,
 add a forwarding rule ahead of the catch-all, or configure Google as an IdP.
+
+## 9. The household backbone — `tiny-mountain-65c7` (identified 2026-09-12)
+
+**This section corrects two claims the 2026-07-25 sweep got wrong.** That sweep ran
+over the `cball8475` GitHub account only, so it saw no source for three workers and
+concluded they had none. The source is under a **different owner account**,
+`ballyhofam-bot`, which the sweep never enumerated.
+
+| Claim as of 2026-07-25 | Corrected 2026-09-12 |
+|---|---|
+| `tiny-mountain-65c7` is unrecognized; identify or retire | Deliberate shared backbone. **Do not retire.** |
+| `ball-family-api` / `-ingest` have no source in repo | Source is `ballyhofam-bot/tiny-mountain-65c7` † |
+
+### What it is
+
+D1 `tiny-mountain-65c7` (`18788c94-4b72-471b-b186-e09c1d37b2e9`) is the shared
+multi-domain backbone for the Ball household and the side businesses — one D1, many
+workers. It documents itself: read `meta_config` for `purpose`, `naming_convention`,
+`route_convention`, `github_repo` and `family_data_status` before touching anything
+here.
+
+- **Table prefixes:** `mem_` chat↔code persistence, `news_` newsletters, `meta_`
+  registry. Family HQ tables keep legacy unprefixed names for app compatibility.
+- **Routes:** public `/`, `/health`, `/health/db`; authed (Bearer `API_KEY`)
+  `/v1/memory`, `/v1/news`, `/v1/family`, `/v1/meta`.
+- **Frontends** (from the deployed `ball-family-api` CORS allowlist):
+  `ball-family-hq.pages.dev` (React PWA, canonical), `ball-family-wall.pages.dev`
+  (kitchen wall unit), `ball-family-hq.netlify.app`.
+
+### Two databases, and why row counts cannot tell them apart
+
+There are two family databases. `meta_config.family_data_status` records a cutover
+that is **half done**:
+
+| | `ball-family-hq` `2f3c54ae…` | `tiny-mountain-65c7` `18788c94…` |
+|---|---|---|
+| Role | retained orphan | **live** |
+| `ball-family-ingest` | repointed away 2026-08-23 | writes land here |
+| `ball-family-api` | bound here until 2026-09-01 | bound here now |
+
+Both hold near-identical row counts, so **counting rows cannot tell them apart.**
+Identify them by UUID or by the tables only the live one has: `mem_store`,
+`meta_config`, `custom_meals`, `meta_workers`, `news_*`, `automation_heartbeats`.
+The orphan is retained by decision, not abandoned by accident — do not delete it
+without checking what still reads from it.
+
+### † On the source claim
+
+`meta_config.github_repo` names `ballyhofam-bot/tiny-mountain-65c7 (private)`.
+That is the database's own record and it has **not** been verified against GitHub
+from this session — the repo did not appear in the accessible repo list, which is
+consistent with it being private under another owner. What *is* verified: the
+deployed source of `ball-family-api` is readable from Cloudflare and its bundle
+carries a `src/index.js` path and sourcemap, so the worker is recoverable whatever
+the repo's state. Re-check the repo claim before relying on it.
+

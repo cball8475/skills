@@ -155,9 +155,15 @@ the two drift.
 
 ## Reference files
 
-`references/` sits next to this file in the **private** `cball8475/skills` repo. That
-placement is deliberate — these files name live exposures, and every other FSC/EATON
-repo is public (rotation-status → "Repo visibility").
+`references/` sits next to this file in the `cball8475/skills` repo.
+
+⚠️ **That repo is PUBLIC** (verified anonymously 2026-09-13 — a no-auth raw fetch
+returns 200, while the same request against `before-human-error`, `EATON` and
+`florence-crm-api` returns 404). These files carry no secret values, but they do
+carry the map: account and database ids, the worker inventory, and an ordered list
+of which exposures are still open. Treat them as published, and do not add
+exposure detail here on the belief that it is private. `rotation-status.md` →
+"Repo visibility" has the full picture and the re-verification command.
 
 - `references/registry.md` — every credential: name, location, verified status, and
   §6's open gaps

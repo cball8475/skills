@@ -156,33 +156,65 @@ is printed — say the word and pass a fresh scoped token (not the master).
 
 ---
 
-## Repo visibility — the reason this file lives here
+## Repo visibility — READ THIS BEFORE ADDING ANYTHING HERE
 
-**All five FSC/EATON GitHub repos are PUBLIC** (verified 2026-07-25 via the
-repos API: `site-admin`, `EATON`, `cball8475.github.io`, `LWVNewportCounty`,
-`budget-guru-narrative` all return `private: false`). `cball8475/skills` is the
-**only private** repo — which is why this file, and any document naming live
-exposures, belongs here and not in site-admin.
+⚠️ **This section's premise was wrong, and wrong in the direction that matters.
+Corrected 2026-09-13.**
 
-This corrects a load-bearing wrong assumption. `site-admin/kb/fsc-memory.md`
-states the EATON bearer's new value "lives in the EATON repo `infra/env.sh`
-(private repo) — never in this repo (public)." **EATON is not private.** The
-2026-07-23 rotation, which was itself a response to that token leaking from a
-public dashboard, moved the value from one public location to another. The bearer
-has been readable on GitHub since. That is why item 3 of this runbook is urgent
-rather than housekeeping.
+It used to say `cball8475/skills` was the only private repo, "which is why this
+file, and any document naming live exposures, belongs here." **`cball8475/skills`
+is PUBLIC.** It is a fork of `mattpocock/skills`, and a fork of a public repo is
+public by default.
 
-Beyond credentials, the public EATON repo also carries `claude.md` with Charlie's
-employee ID, cost centre, work email, and named succession details about a
-colleague, plus `kb/` tribal-knowledge files about coworkers. That is a personnel
-privacy exposure independent of any secret.
+Verified anonymously, 2026-09-13: a no-auth request for
+`raw.githubusercontent.com/cball8475/skills/main/skills/personal/fsc-credentials/references/rotation-status.md`
+returns **200** and serves this file, while the same request against
+`before-human-error`, `EATON` and `florence-crm-api` returns **404**. The 404s are
+the control that makes the 200 mean something.
 
-**Recommended:** make `site-admin` and `EATON` private. Caveats to check first —
-`cball8475.github.io` must stay public (user Pages site), `LWVNewportCounty` likely
-serves the league site from Pages, and EATON has GitHub Pages build runs, so if its
-dashboard is served from Pages, going private needs a plan that supports private
-Pages or a move to Cloudflare. site-admin reports `has_pages: false`, so it can be
-made private with no hosting impact.
+| Repo | Visibility (2026-09-13) |
+|---|---|
+| **`cball8475/skills`** | **PUBLIC — and it holds this file** |
+| `site-admin` | PUBLIC |
+| `LWVNewportCounty` | PUBLIC |
+| `budget-guru-narrative` | PUBLIC |
+| `cball8475.github.io` | public — user Pages site, must stay |
+| `EATON` | **private** — changed since 2026-07-25 |
+| `florence-crm-api` | private |
+| `before-human-error` | private |
+
+Two things follow, and the second is the one that changes behaviour.
+
+**Treat everything in this directory as published.** Not secret values — there are
+none here, and a shape scan confirms it — but the map: account and database ids,
+the worker inventory, token ids, and an ordered list of which exposures are still
+open. Making the repo private reduces further reading; it is not a retraction, and
+because this is a fork, commits pushed while it was public can stay reachable
+through the fork network.
+
+**"Put it in the private repo" is not a placement rule that works here.** Until the
+visibility is actually changed *and* re-verified with the no-auth check above, do
+not add exposure detail to this directory believing it is unpublished.
+
+### What the old section got right
+
+EATON *was* public when the 2026-07-25 audit ran. So the audit's finding stands:
+`site-admin/kb/fsc-memory.md` claimed the EATON bearer lived safely in a "private"
+EATON repo, and the 2026-07-23 rotation moved that value from one public location
+to another. The bearer was readable on GitHub for that window, which is why item 3
+was a rotation and not housekeeping. **EATON is private now** — that recommendation
+has been carried out.
+
+Also still open from that audit: the EATON repo carries `claude.md` with Charlie's
+employee ID, cost centre, work email and named succession details about a
+colleague, plus `kb/` files about coworkers. Going private limits who can read it
+now, but anything published during the public window is already out — a personnel
+privacy matter independent of any secret.
+
+**Still recommended:** make `site-admin` private (it reports `has_pages: false`, so
+no hosting impact), and decide on `cball8475/skills` — which, holding this file, is
+the more urgent of the two. `cball8475.github.io` must stay public, and
+`LWVNewportCounty` likely serves the league site from Pages.
 
 Note that removing a file from a public repo does not remove it from history —
 these values are already published. Rotation is the remediation; relocation only

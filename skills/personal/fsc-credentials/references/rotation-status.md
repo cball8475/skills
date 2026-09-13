@@ -1,7 +1,8 @@
 # Credential rotation runbook
 
-Ordered by urgency. Items 1–3 are active exposures — credentials pasted into a
-chat transcript or committed to git. Do them first, today.
+Ordered by urgency. Items 1–3 were the active exposures — credentials pasted into a
+chat transcript or committed to git. **1 and 3 are now closed** (see each item);
+**item 2 is still open**, and item 4 is gated on the fsc-dashboard cutover.
 
 Ground rule throughout: set new values interactively (`wrangler secret put`
 prompts; dashboard fields) — never paste a secret into a command line or a
@@ -9,30 +10,40 @@ commit. Revoke the old value only after the new one is confirmed working.
 
 ---
 
-## 1. Cloudflare "CF Master Token" — EMERGENCY
+## 1. Cloudflare "CF Master Token" — ✅ ROTATED (reported 2026-09-13)
 
-The current account API token was pasted in chat. It is a **full-account master
-token**: Secrets Store write, Workers Scripts write, Account API Tokens write,
-Access write, DNS, Email Routing — total control of the account. Treat it as
-compromised now.
+Charlie confirmed a least-privilege token replaced the masters. Its value lives in
+**1Password → `FSC-infra` → `Cloudflare API`** — the only copy, since Cloudflare
+shows a token secret once and never again (registry §7).
 
-There are **two** tokens named "CF Master Token" (ids `d2fbf2c3…` used today,
-`b3a2b3be…` never used) plus an old `cfut_`-prefixed token also pasted. Rotate all
-of them, and take the opportunity to stop using a master token in automation:
+**Reported, not verified from a session here.** No session in this repo has held a
+`CLOUDFLARE_API_TOKEN`, and the Cloudflare MCP tools cover Workers, D1, KV and R2 —
+not token management. Two things are still worth a look from a shell that has the
+token, and both are cheap:
 
-1. Zero Trust / dashboard → My Profile → **API Tokens**.
-2. **Create one least-privilege token** for CI/deploys: Workers Scripts (edit),
-   Secrets Store (read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI,
-   Account Settings (read). That is everything the deploys and this session's
-   work actually used.
-3. Put it in the site-admin repo secret `CLOUDFLARE_API_TOKEN`, and anywhere else
-   a deploy token is configured.
-4. **Roll (regenerate) or delete both "CF Master Token"s and the old `cfut_`
-   token.** Nothing should keep a master-scoped token in automation.
-5. Confirm a deploy still runs green with the new scoped token.
+- the new token's id and actual scopes
+- that the `site-admin` repo secret `CLOUDFLARE_API_TOKEN` holds the new value, not
+  a master left in place — one green deploy run proves it
 
-This single step also closes audit item A2 (deploy token needs Secrets Store
-read) and retires the never-used second master token.
+Closing this also closed audit item A2 (deploy token needs Secrets Store read) and
+retired the never-used second master token.
+
+### What this was, and why it is written down
+
+The account API token had been pasted into a chat transcript. It was a
+**full-account master token**: Secrets Store write, Workers Scripts write, Account
+API Tokens write, Access write, DNS, Email Routing — total control of the account.
+Two tokens carried the name "CF Master Token" (ids `d2fbf2c3…` used, `b3a2b3be…`
+never used), plus an older `cfut_`-prefixed token also pasted.
+
+The scoping that replaced it: Workers Scripts (edit), Secrets Store (read), D1
+(edit), R2 (edit), Vectorize (edit), Workers AI, Account Settings (read) — which is
+everything the deploys and the audit session actually exercised. Keep that list; it
+is the answer to "what scopes does the next token need."
+
+Either superseded id showing up in a config or workflow after this is a leftover to
+clean up, not a working credential to keep. Rotation procedure lives in
+`rotation-sops.md` → "`CLOUDFLARE_API_TOKEN`".
 
 ## 2. GitHub PAT `fsc-crm-api-push` — EMERGENCY
 
@@ -76,6 +87,17 @@ Still open from the original item, both optional:
 Do this **after** the fsc-dashboard cutover deletes the Netlify site (see
 `dashboard-deploy.md` C2). Rotating before then breaks the live Netlify dashboard,
 which still serves the old baked bearer.
+
+**Still gated as of 2026-09-13, and the gate is one action.** Checked against the
+Netlify account that day: `site-admin-fsc` is live, claimed, current deploy `ready`,
+and carries no password or SSO gate. Cloudflare's side is up —
+`dashboard.florencescservices.com` is Access-gated — so what stands between here and
+a clean rotation is **deleting the Netlify site**, not building anything further.
+`florence-dashboard-proxy` is also still in the account (C5 says delete it).
+
+Worth stating plainly because the belief runs the other way: Charlie's recollection
+on 2026-09-13 was that Netlify was already out of the picture. It is not. Nine
+projects are live (registry §6). Check the account, not the memory of the cutover.
 
 The bearer exists in six places — four plain worker secrets, Secrets Store, and
 Netlify:
@@ -134,33 +156,65 @@ is printed — say the word and pass a fresh scoped token (not the master).
 
 ---
 
-## Repo visibility — the reason this file lives here
+## Repo visibility — READ THIS BEFORE ADDING ANYTHING HERE
 
-**All five FSC/EATON GitHub repos are PUBLIC** (verified 2026-07-25 via the
-repos API: `site-admin`, `EATON`, `cball8475.github.io`, `LWVNewportCounty`,
-`budget-guru-narrative` all return `private: false`). `cball8475/skills` is the
-**only private** repo — which is why this file, and any document naming live
-exposures, belongs here and not in site-admin.
+⚠️ **This section's premise was wrong, and wrong in the direction that matters.
+Corrected 2026-09-13.**
 
-This corrects a load-bearing wrong assumption. `site-admin/kb/fsc-memory.md`
-states the EATON bearer's new value "lives in the EATON repo `infra/env.sh`
-(private repo) — never in this repo (public)." **EATON is not private.** The
-2026-07-23 rotation, which was itself a response to that token leaking from a
-public dashboard, moved the value from one public location to another. The bearer
-has been readable on GitHub since. That is why item 3 of this runbook is urgent
-rather than housekeeping.
+It used to say `cball8475/skills` was the only private repo, "which is why this
+file, and any document naming live exposures, belongs here." **`cball8475/skills`
+is PUBLIC.** It is a fork of `mattpocock/skills`, and a fork of a public repo is
+public by default.
 
-Beyond credentials, the public EATON repo also carries `claude.md` with Charlie's
-employee ID, cost centre, work email, and named succession details about a
-colleague, plus `kb/` tribal-knowledge files about coworkers. That is a personnel
-privacy exposure independent of any secret.
+Verified anonymously, 2026-09-13: a no-auth request for
+`raw.githubusercontent.com/cball8475/skills/main/skills/personal/fsc-credentials/references/rotation-status.md`
+returns **200** and serves this file, while the same request against
+`before-human-error`, `EATON` and `florence-crm-api` returns **404**. The 404s are
+the control that makes the 200 mean something.
 
-**Recommended:** make `site-admin` and `EATON` private. Caveats to check first —
-`cball8475.github.io` must stay public (user Pages site), `LWVNewportCounty` likely
-serves the league site from Pages, and EATON has GitHub Pages build runs, so if its
-dashboard is served from Pages, going private needs a plan that supports private
-Pages or a move to Cloudflare. site-admin reports `has_pages: false`, so it can be
-made private with no hosting impact.
+| Repo | Visibility (2026-09-13) |
+|---|---|
+| **`cball8475/skills`** | **PUBLIC — and it holds this file** |
+| `site-admin` | PUBLIC |
+| `LWVNewportCounty` | PUBLIC |
+| `budget-guru-narrative` | PUBLIC |
+| `cball8475.github.io` | public — user Pages site, must stay |
+| `EATON` | **private** — changed since 2026-07-25 |
+| `florence-crm-api` | private |
+| `before-human-error` | private |
+
+Two things follow, and the second is the one that changes behaviour.
+
+**Treat everything in this directory as published.** Not secret values — there are
+none here, and a shape scan confirms it — but the map: account and database ids,
+the worker inventory, token ids, and an ordered list of which exposures are still
+open. Making the repo private reduces further reading; it is not a retraction, and
+because this is a fork, commits pushed while it was public can stay reachable
+through the fork network.
+
+**"Put it in the private repo" is not a placement rule that works here.** Until the
+visibility is actually changed *and* re-verified with the no-auth check above, do
+not add exposure detail to this directory believing it is unpublished.
+
+### What the old section got right
+
+EATON *was* public when the 2026-07-25 audit ran. So the audit's finding stands:
+`site-admin/kb/fsc-memory.md` claimed the EATON bearer lived safely in a "private"
+EATON repo, and the 2026-07-23 rotation moved that value from one public location
+to another. The bearer was readable on GitHub for that window, which is why item 3
+was a rotation and not housekeeping. **EATON is private now** — that recommendation
+has been carried out.
+
+Also still open from that audit: the EATON repo carries `claude.md` with Charlie's
+employee ID, cost centre, work email and named succession details about a
+colleague, plus `kb/` files about coworkers. Going private limits who can read it
+now, but anything published during the public window is already out — a personnel
+privacy matter independent of any secret.
+
+**Still recommended:** make `site-admin` private (it reports `has_pages: false`, so
+no hosting impact), and decide on `cball8475/skills` — which, holding this file, is
+the more urgent of the two. `cball8475.github.io` must stay public, and
+`LWVNewportCounty` likely serves the league site from Pages.
 
 Note that removing a file from a public repo does not remove it from history —
 these values are already published. Rotation is the remediation; relocation only

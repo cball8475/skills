@@ -26,6 +26,9 @@ description: Manages the full credential registry for Florence SC Services LLC i
 6. **`VITE_`-prefixed vars are published, not stored.** Vite inlines them into the
    public bundle at build time. Anything with that prefix is world-readable the moment
    it deploys.
+7. **Check which copy of this file you have before trusting it.** If there is no
+   `references/` directory next to it, you are running a partial upload, not the
+   skill — see "Reference files" at the bottom.
 
 ---
 
@@ -81,8 +84,13 @@ Never `POST /digest/send`. Never send test SMS or email.
 
 Tell him exactly where to get it and where to put it — don't just say "go find it."
 
-- `CLOUDFLARE_API_TOKEN` — Cloudflare → My Profile → API Tokens (also needed for local
-  wrangler; absent from cloud sessions)
+- `CLOUDFLARE_API_TOKEN` — **the value is in 1Password: vault `FSC-infra`, item
+  `Cloudflare API`.** The dashboard cannot give it back. Cloudflare shows a token
+  secret once, at creation; My Profile → API Tokens lists a token's name, scopes,
+  status and last-used date and nothing more. Send Charlie to 1Password, not to
+  Cloudflare — Cloudflare is where you go to mint a *replacement*, which is a
+  rotation (`references/rotation-sops.md`), not a lookup. Also needed for local
+  wrangler; absent from cloud sessions
 - GitHub Actions repo secrets — remote sessions cannot read or set these; the proxy
   blocks the Actions-secrets endpoints
 - Google account / OAuth consent (Ads, GA4, GSC)
@@ -115,11 +123,15 @@ npx wrangler secret put SECRET_NAME --name worker-name   # prompts; paste, Enter
 
 Dashboard path: Workers & Pages → worker → Settings → Variables → Secrets.
 
-Two credentials are **two-place changes** — miss the second place and it silently
-half-works:
+Two bearers fan out across several places at once. Every copy must move to the same
+value in one pass — miss one and that path 401s while everything else looks fine:
 
-- The CRM bearer must match across florence-crm-api `API_TOKEN` **and** Netlify
+- The CRM bearer is a **six-place change**: florence-crm-api `API_TOKEN`, three
+  worker `CRM_API_TOKEN` copies (dashboard-proxy, lead-capture,
+  auto-outreach-emails), Secrets Store `CRM_API_TOKEN`, and Netlify
   `VITE_CRM_API_TOKEN` (plus a redeploy, since Vite inlines at build time).
+  `references/rotation-status.md` item 4 has the table and the ordering — and the
+  reason to wait for the fsc-dashboard cutover before rotating at all. Read it first.
 - The EATON bearer is a **four-place change** (Secrets Store `EATON_TOKEN`,
   worker `API_TOKEN` fallback, D1 `app_config`, dashboard localStorage) — which
   is why it is never rotated by hand: run the **Rotate EATON API token**
@@ -143,6 +155,29 @@ the two drift.
 
 ## Reference files
 
-- `references/registry.md` — every credential: name, location, verified status, and the
-  open gaps (including the incomplete Worker inventory and the published CRM bearer)
-- `references/rotation-sops.md` — per-service rotation procedures
+`references/` sits next to this file in the `cball8475/skills` repo.
+
+⚠️ **That repo is PUBLIC** (verified anonymously 2026-09-13 — a no-auth raw fetch
+returns 200, while the same request against `before-human-error`, `EATON` and
+`florence-crm-api` returns 404). These files carry no secret values, but they do
+carry the map: account and database ids, the worker inventory, and an ordered list
+of which exposures are still open. Treat them as published, and do not add
+exposure detail here on the belief that it is private. `rotation-status.md` →
+"Repo visibility" has the full picture and the re-verification command.
+
+- `references/registry.md` — every credential: name, location, verified status, and
+  §6's open gaps
+- `references/rotation-sops.md` — how to rotate each service, one procedure per
+  credential
+- `references/rotation-status.md` — the ordered rotation runbook: which exposures are
+  still open and what actually closes each. Read it before any rotation. The SOPs say
+  *how*; this says *whether, and in what order*
+
+⚠️ **No `references/` next to this file means you have a partial copy, not the skill.**
+The claude.ai upload of this skill has shipped SKILL.md alone before, which turns every
+link above into a dead end. Say so plainly instead of guessing at the contents, and read
+them from `cball8475/skills` → `skills/personal/fsc-credentials/references/`.
+
+Treat a partial copy as unverified throughout, not just at the links: the SKILL.md-only
+upload sitting in claude.ai as of 2026-09-13 is the April 2026 revision, and it still
+hands out a CRM bearer that was rotated out from under it months ago.

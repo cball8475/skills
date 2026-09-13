@@ -302,9 +302,10 @@ requires a redeploy.
 | `VITE_GOOGLE_PLACES_KEY` | ⚠️ set, `AIza…` key published in the bundle. Needs HTTP-referrer restriction |
 | `VITE_GITHUB_TOKEN` | ❌ **orphaned — delete it** |
 
-⚠️ **This whole section is being retired.** Once the fsc-dashboard cutover is done,
-the dashboard builds in GitHub Actions and deploys to Cloudflare, and Netlify holds
-nothing. Of these four, only `VITE_GOOGLE_PLACES_KEY` carries over — as a repo secret
+⚠️ **This section is *planned* for retirement, and as of 2026-09-13 it has not
+happened** — the site is still live and ungated (§6). Treat everything below as
+current, not historical. Once the fsc-dashboard cutover is finished the dashboard
+builds in GitHub Actions and deploys to Cloudflare, and Netlify holds nothing. Of these four, only `VITE_GOOGLE_PLACES_KEY` carries over — as a repo secret
 in site-admin, with its HTTP-referrer restriction moved to
 `dashboard.florencescservices.com`. The other three should not be recreated anywhere.
 
@@ -418,28 +419,105 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
   historical value → 401, rotated value from `app_config` → 200 end-to-end from a
   cloud session. Residual: the git-history value is dead but the *pattern* stands —
   any future commit of a secret restarts this clock.
+- **The claude.ai copy of this skill is the April 2026 revision — 2026-09-13.** What a
+  session actually loads is a SKILL.md-only upload, not this directory. It carries the
+  CRM bearer inline in four places and links to a `references/` directory the upload
+  never shipped, so every cross-reference in it dead-ends. The bearer in it was tested
+  read-only on 2026-09-13 and is **dead**: `GET /prospects` returns 401 with it while
+  `/health` returns 200, so the API is up and the credential is simply rejected. There
+  is nothing to rotate for *that* value — but being dead is not the fix. That copy is
+  still what gets loaded, and it hands out a dead credential and broken links as
+  authoritative. **Re-upload this skill from this repo with `references/` included.**
+  Until then, ground rule 7 is the only thing standing between a session and the April
+  file.
+- **Netlify was NOT retired — checked against the account 2026-09-13.** Charlie's
+  recollection that day was "I don't use Netlify anymore, everything went into
+  Cloudflare secrets." The account says otherwise, and this entry exists so the next
+  session checks instead of inheriting the belief.
+
+  **Nine projects are live**, all claimed, all with a `ready` current deploy:
+  `site-admin-fsc`, `ball-family-hq`, `eaton-ehs-cmd`, `eaton-ehs-dashboard`,
+  `eaton-ehs-cb`, `eaton-wsra-form`, `florence-health-monitor`, `push-pull-calc`,
+  `sumter-heat-check`. Team `69a8c91fd7422154901e33bb`.
+
+  **`site-admin-fsc` is the one that matters here.** Its id is
+  `18eefea7-8ee6-4e49-ad55-5896060f9be1` — the same id §0 records — and it served
+  `200` with `server: Netlify` at 21:44 UTC on 2026-09-13, current deploy
+  `6a796224e81e3700086f0f4b`, state `ready`. It carries **no** Netlify-level gate:
+  `requiresPassword: false`, `requiresSSOTeamLogin: false`. §3's exposure is
+  therefore still open, and item 4 of `rotation-status.md` is still correctly gated:
+  what unblocks it is deleting this site, which has not happened.
+
+  The bundle itself was **not** re-read this session — pulling a credential back out
+  of it was blocked — so "does it still carry a working bearer" is unconfirmed since
+  2026-07-25. Assume it does. The site being live and ungated is the part that was
+  verified.
+- **The Cloudflare side of the cutover is partly real — 2026-09-13.**
+  `dashboard.florencescservices.com` 302s to Cloudflare Access with
+  `server: cloudflare`, and the AUD in that redirect matches the one §0 records for
+  the "FSC Dashboard" app. So the new gated path exists. What did not happen is the
+  teardown: the old Netlify site is still published (above), and
+  `florence-dashboard-proxy` — which C5 said to delete rather than rotate — is still
+  in the account, last modified 2026-07-10.
+
+  ⏳ **No Worker named `fsc-dashboard` exists.** All 16 workers from the 2026-07-25
+  sweep are still there and that name is not among them, so §2 describes something
+  that is not a Worker under that name. It may be a Pages project — `workers_list`
+  does not enumerate Pages, and no tool here does — so this is unresolved, not
+  disproved. Settle it before relying on §2's description of how the bearer reaches
+  that path.
 
 
 ---
 
-## 7. Cloudflare API tokens (verified 2026-07-25)
+## 7. Cloudflare API tokens
 
-Two account-owned tokens exist, **both named "CF Master Token"**, both active,
+### Where the value lives
+
+**1Password → vault `FSC-infra` → item `Cloudflare API`.** That is the copy of
+record, and in practice the only one.
+
+**The Cloudflare dashboard cannot give this value back.** A token secret is displayed
+exactly once, at creation — *"The token secret is only shown once"*
+([Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)).
+My Profile → API Tokens afterwards lists a token's name, scopes, status and last-used
+date; there is no view-value action there or in the API. So Cloudflare answers "which
+tokens exist and what can they do", and 1Password answers "what is the value" — going
+to the dashboard for a value is a dead end, not a slow path.
+
+If the 1Password item is missing or stale, the token is not recoverable. The only way
+out is minting a fresh value and updating every consumer — a rotation, not a lookup.
+See `rotation-sops.md` → "`CLOUDFLARE_API_TOKEN`".
+
+### Current token — rotated to least-privilege (reported 2026-09-13)
+
+Charlie confirmed the replacement from `rotation-status.md` item 1 is in place: a
+scoped token, with the master tokens no longer in use.
+
+**Recorded from his report, not verified here.** No session in this repo has ever had
+a `CLOUDFLARE_API_TOKEN`, and the Cloudflare MCP tools cover Workers, D1, KV and R2 —
+not token management. Status legend ⏳ applies to the details:
+
+⏳ Still to confirm from a session or shell that holds the token: its id, its actual
+scopes, and whether the `site-admin` repo secret `CLOUDFLARE_API_TOKEN` was updated to
+it (step 3 of rotation-status item 1). A deploy workflow running green is the cheap
+proof of the last one.
+
+### Superseded — the two "CF Master Token"s (2026-07-25 audit)
+
+Kept for identification, not for use. Both account-owned, both active at the time,
 both expiring 2027-05-24:
 
 | id | last used | notes |
 |---|---|---|
-| `d2fbf2c3633f5c7951cae84b724cc62d` | 2026-07-25 | confirmed scopes include Secrets Store (read) + Workers |
-| `b3a2b3be40a7ac94f4c10cd09428c88b` | **never** | unused active credential — delete |
+| `d2fbf2c3633f5c7951cae84b724cc62d` | 2026-07-25 | scopes included Secrets Store (read) + Workers |
+| `b3a2b3be40a7ac94f4c10cd09428c88b` | **never** | unused active credential |
 
-Which one CI uses could not be determined: an account-owned token cannot enumerate
-user-owned tokens, so a third user-owned token may be the one in the site-admin repo
-secret.
-
-Recommended: create one least-privilege token — Workers Scripts (edit), Secrets
-Store (read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI — put it in the
-repo secret, and delete both "CF Master Token"s. A token named "master" is more
-authority than a dashboard deploy needs, and one of the two has never been used.
+Either id turning up in a config, a workflow or a log after 2026-09-13 is a leftover
+to clean up. One gap the audit could not close: an account-owned token cannot
+enumerate user-owned tokens, so it could never prove which token the site-admin repo
+secret actually held — which is why that is listed under ⏳ above rather than assumed
+settled.
 
 ## 8. Access / Zero Trust
 

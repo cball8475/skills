@@ -88,6 +88,17 @@ Do this **after** the fsc-dashboard cutover deletes the Netlify site (see
 `dashboard-deploy.md` C2). Rotating before then breaks the live Netlify dashboard,
 which still serves the old baked bearer.
 
+**Still gated as of 2026-09-13, and the gate is one action.** Checked against the
+Netlify account that day: `site-admin-fsc` is live, claimed, current deploy `ready`,
+and carries no password or SSO gate. Cloudflare's side is up —
+`dashboard.florencescservices.com` is Access-gated — so what stands between here and
+a clean rotation is **deleting the Netlify site**, not building anything further.
+`florence-dashboard-proxy` is also still in the account (C5 says delete it).
+
+Worth stating plainly because the belief runs the other way: Charlie's recollection
+on 2026-09-13 was that Netlify was already out of the picture. It is not. Nine
+projects are live (registry §6). Check the account, not the memory of the cutover.
+
 The bearer exists in six places — four plain worker secrets, Secrets Store, and
 Netlify:
 

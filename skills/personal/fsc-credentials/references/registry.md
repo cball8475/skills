@@ -302,9 +302,10 @@ requires a redeploy.
 | `VITE_GOOGLE_PLACES_KEY` | ⚠️ set, `AIza…` key published in the bundle. Needs HTTP-referrer restriction |
 | `VITE_GITHUB_TOKEN` | ❌ **orphaned — delete it** |
 
-⚠️ **This whole section is being retired.** Once the fsc-dashboard cutover is done,
-the dashboard builds in GitHub Actions and deploys to Cloudflare, and Netlify holds
-nothing. Of these four, only `VITE_GOOGLE_PLACES_KEY` carries over — as a repo secret
+⚠️ **This section is *planned* for retirement, and as of 2026-09-13 it has not
+happened** — the site is still live and ungated (§6). Treat everything below as
+current, not historical. Once the fsc-dashboard cutover is finished the dashboard
+builds in GitHub Actions and deploys to Cloudflare, and Netlify holds nothing. Of these four, only `VITE_GOOGLE_PLACES_KEY` carries over — as a repo secret
 in site-admin, with its HTTP-referrer restriction moved to
 `dashboard.florencescservices.com`. The other three should not be recreated anywhere.
 
@@ -429,12 +430,42 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
   authoritative. **Re-upload this skill from this repo with `references/` included.**
   Until then, ground rule 7 is the only thing standing between a session and the April
   file.
-- **`site-admin-fsc.netlify.app` still answers — 2026-09-13.** Returned 200. Per §3
-  "Known exposure", deleting that site is what actually closes the published-bearer
-  hole, not deploying the replacement, so item 4 of `rotation-status.md` is still
-  correctly gated on the cutover. The published bundle was **not** re-examined this
-  session — reading a credential back out of it was blocked — so whether it still
-  carries a working bearer is unconfirmed since 2026-07-25. Assume it does.
+- **Netlify was NOT retired — checked against the account 2026-09-13.** Charlie's
+  recollection that day was "I don't use Netlify anymore, everything went into
+  Cloudflare secrets." The account says otherwise, and this entry exists so the next
+  session checks instead of inheriting the belief.
+
+  **Nine projects are live**, all claimed, all with a `ready` current deploy:
+  `site-admin-fsc`, `ball-family-hq`, `eaton-ehs-cmd`, `eaton-ehs-dashboard`,
+  `eaton-ehs-cb`, `eaton-wsra-form`, `florence-health-monitor`, `push-pull-calc`,
+  `sumter-heat-check`. Team `69a8c91fd7422154901e33bb`.
+
+  **`site-admin-fsc` is the one that matters here.** Its id is
+  `18eefea7-8ee6-4e49-ad55-5896060f9be1` — the same id §0 records — and it served
+  `200` with `server: Netlify` at 21:44 UTC on 2026-09-13, current deploy
+  `6a796224e81e3700086f0f4b`, state `ready`. It carries **no** Netlify-level gate:
+  `requiresPassword: false`, `requiresSSOTeamLogin: false`. §3's exposure is
+  therefore still open, and item 4 of `rotation-status.md` is still correctly gated:
+  what unblocks it is deleting this site, which has not happened.
+
+  The bundle itself was **not** re-read this session — pulling a credential back out
+  of it was blocked — so "does it still carry a working bearer" is unconfirmed since
+  2026-07-25. Assume it does. The site being live and ungated is the part that was
+  verified.
+- **The Cloudflare side of the cutover is partly real — 2026-09-13.**
+  `dashboard.florencescservices.com` 302s to Cloudflare Access with
+  `server: cloudflare`, and the AUD in that redirect matches the one §0 records for
+  the "FSC Dashboard" app. So the new gated path exists. What did not happen is the
+  teardown: the old Netlify site is still published (above), and
+  `florence-dashboard-proxy` — which C5 said to delete rather than rotate — is still
+  in the account, last modified 2026-07-10.
+
+  ⏳ **No Worker named `fsc-dashboard` exists.** All 16 workers from the 2026-07-25
+  sweep are still there and that name is not among them, so §2 describes something
+  that is not a Worker under that name. It may be a Pages project — `workers_list`
+  does not enumerate Pages, and no tool here does — so this is unresolved, not
+  disproved. Settle it before relying on §2's description of how the bearer reaches
+  that path.
 
 
 ---

@@ -57,6 +57,43 @@ snapshots. Use a health or preview endpoint.
 
 ---
 
+## `CLOUDFLARE_API_TOKEN` (the account API token)
+
+The value is in **1Password → `FSC-infra` → `Cloudflare API`**. Nothing else can give
+it back — Cloudflare shows a token secret once, at creation, and the dashboard
+afterwards shows only name, scopes, status and last-used. So there is no "look it up"
+path here: if the 1Password item is stale, the token is lost and this procedure is the
+recovery.
+
+This token gates most of the others. `wrangler secret put` for every worker secret
+above needs it, so rotating it badly locks you out of rotating anything else — do it
+from a shell you can test in, not from a cloud session.
+
+1. Cloudflare → My Profile → API Tokens. **Roll** the existing token to mint a fresh
+   value for the same token, or **Create** a new one when the scopes need to change.
+   Either way the value appears on one screen, once.
+2. **Update 1Password `FSC-infra` → `Cloudflare API` before touching any consumer.**
+   A value living only in a terminal scrollback is already most of the way to lost.
+3. Update every consumer: the `site-admin` repo secret `CLOUDFLARE_API_TOKEN`, any
+   other repo secret a deploy workflow reads, and local shells
+   (`~/.wrangler-config`, shell profile, `.dev.vars`).
+4. Confirm before revoking anything: re-run a deploy workflow and see it green, or run
+   `npx wrangler secret list --name florence-crm-api` from a shell holding the new
+   value. A `403` here is a scope problem, not a bad value — check permissions before
+   assuming the rotation failed.
+5. Only then delete the old token, and only if you created a new one rather than
+   rolling the existing one.
+
+Scope it to what the FSC deploys actually use: Workers Scripts (edit), Secrets Store
+(read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI, Account Settings (read).
+A master-scoped token in automation is the thing `rotation-status.md` item 1 was
+opened to end.
+
+Never commit one. GitHub push protection rejects `cfat_`-prefixed Cloudflare tokens,
+and disabling that check to get a commit through is never the answer.
+
+---
+
 ## Secrets-Store secrets (EATON bearer) — automated 2026-07-29
 
 `EATON_TOKEN` lives in Cloudflare Secrets Store (store `80c48360a0e54dd69425da2dfbde21ad`),

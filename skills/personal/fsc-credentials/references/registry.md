@@ -418,28 +418,75 @@ florence-lead-followup). SendGrid, Stripe, and Wave appear nowhere.
   historical value → 401, rotated value from `app_config` → 200 end-to-end from a
   cloud session. Residual: the git-history value is dead but the *pattern* stands —
   any future commit of a secret restarts this clock.
+- **The claude.ai copy of this skill is the April 2026 revision — 2026-09-13.** What a
+  session actually loads is a SKILL.md-only upload, not this directory. It carries the
+  CRM bearer inline in four places and links to a `references/` directory the upload
+  never shipped, so every cross-reference in it dead-ends. The bearer in it was tested
+  read-only on 2026-09-13 and is **dead**: `GET /prospects` returns 401 with it while
+  `/health` returns 200, so the API is up and the credential is simply rejected. There
+  is nothing to rotate for *that* value — but being dead is not the fix. That copy is
+  still what gets loaded, and it hands out a dead credential and broken links as
+  authoritative. **Re-upload this skill from this repo with `references/` included.**
+  Until then, ground rule 7 is the only thing standing between a session and the April
+  file.
+- **`site-admin-fsc.netlify.app` still answers — 2026-09-13.** Returned 200. Per §3
+  "Known exposure", deleting that site is what actually closes the published-bearer
+  hole, not deploying the replacement, so item 4 of `rotation-status.md` is still
+  correctly gated on the cutover. The published bundle was **not** re-examined this
+  session — reading a credential back out of it was blocked — so whether it still
+  carries a working bearer is unconfirmed since 2026-07-25. Assume it does.
 
 
 ---
 
-## 7. Cloudflare API tokens (verified 2026-07-25)
+## 7. Cloudflare API tokens
 
-Two account-owned tokens exist, **both named "CF Master Token"**, both active,
+### Where the value lives
+
+**1Password → vault `FSC-infra` → item `Cloudflare API`.** That is the copy of
+record, and in practice the only one.
+
+**The Cloudflare dashboard cannot give this value back.** A token secret is displayed
+exactly once, at creation — *"The token secret is only shown once"*
+([Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/)).
+My Profile → API Tokens afterwards lists a token's name, scopes, status and last-used
+date; there is no view-value action there or in the API. So Cloudflare answers "which
+tokens exist and what can they do", and 1Password answers "what is the value" — going
+to the dashboard for a value is a dead end, not a slow path.
+
+If the 1Password item is missing or stale, the token is not recoverable. The only way
+out is minting a fresh value and updating every consumer — a rotation, not a lookup.
+See `rotation-sops.md` → "`CLOUDFLARE_API_TOKEN`".
+
+### Current token — rotated to least-privilege (reported 2026-09-13)
+
+Charlie confirmed the replacement from `rotation-status.md` item 1 is in place: a
+scoped token, with the master tokens no longer in use.
+
+**Recorded from his report, not verified here.** No session in this repo has ever had
+a `CLOUDFLARE_API_TOKEN`, and the Cloudflare MCP tools cover Workers, D1, KV and R2 —
+not token management. Status legend ⏳ applies to the details:
+
+⏳ Still to confirm from a session or shell that holds the token: its id, its actual
+scopes, and whether the `site-admin` repo secret `CLOUDFLARE_API_TOKEN` was updated to
+it (step 3 of rotation-status item 1). A deploy workflow running green is the cheap
+proof of the last one.
+
+### Superseded — the two "CF Master Token"s (2026-07-25 audit)
+
+Kept for identification, not for use. Both account-owned, both active at the time,
 both expiring 2027-05-24:
 
 | id | last used | notes |
 |---|---|---|
-| `d2fbf2c3633f5c7951cae84b724cc62d` | 2026-07-25 | confirmed scopes include Secrets Store (read) + Workers |
-| `b3a2b3be40a7ac94f4c10cd09428c88b` | **never** | unused active credential — delete |
+| `d2fbf2c3633f5c7951cae84b724cc62d` | 2026-07-25 | scopes included Secrets Store (read) + Workers |
+| `b3a2b3be40a7ac94f4c10cd09428c88b` | **never** | unused active credential |
 
-Which one CI uses could not be determined: an account-owned token cannot enumerate
-user-owned tokens, so a third user-owned token may be the one in the site-admin repo
-secret.
-
-Recommended: create one least-privilege token — Workers Scripts (edit), Secrets
-Store (read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI — put it in the
-repo secret, and delete both "CF Master Token"s. A token named "master" is more
-authority than a dashboard deploy needs, and one of the two has never been used.
+Either id turning up in a config, a workflow or a log after 2026-09-13 is a leftover
+to clean up. One gap the audit could not close: an account-owned token cannot
+enumerate user-owned tokens, so it could never prove which token the site-admin repo
+secret actually held — which is why that is listed under ⏳ above rather than assumed
+settled.
 
 ## 8. Access / Zero Trust
 

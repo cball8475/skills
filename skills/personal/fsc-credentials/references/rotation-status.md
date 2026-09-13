@@ -1,7 +1,8 @@
 # Credential rotation runbook
 
-Ordered by urgency. Items 1–3 are active exposures — credentials pasted into a
-chat transcript or committed to git. Do them first, today.
+Ordered by urgency. Items 1–3 were the active exposures — credentials pasted into a
+chat transcript or committed to git. **1 and 3 are now closed** (see each item);
+**item 2 is still open**, and item 4 is gated on the fsc-dashboard cutover.
 
 Ground rule throughout: set new values interactively (`wrangler secret put`
 prompts; dashboard fields) — never paste a secret into a command line or a
@@ -9,30 +10,40 @@ commit. Revoke the old value only after the new one is confirmed working.
 
 ---
 
-## 1. Cloudflare "CF Master Token" — EMERGENCY
+## 1. Cloudflare "CF Master Token" — ✅ ROTATED (reported 2026-09-13)
 
-The current account API token was pasted in chat. It is a **full-account master
-token**: Secrets Store write, Workers Scripts write, Account API Tokens write,
-Access write, DNS, Email Routing — total control of the account. Treat it as
-compromised now.
+Charlie confirmed a least-privilege token replaced the masters. Its value lives in
+**1Password → `FSC-infra` → `Cloudflare API`** — the only copy, since Cloudflare
+shows a token secret once and never again (registry §7).
 
-There are **two** tokens named "CF Master Token" (ids `d2fbf2c3…` used today,
-`b3a2b3be…` never used) plus an old `cfut_`-prefixed token also pasted. Rotate all
-of them, and take the opportunity to stop using a master token in automation:
+**Reported, not verified from a session here.** No session in this repo has held a
+`CLOUDFLARE_API_TOKEN`, and the Cloudflare MCP tools cover Workers, D1, KV and R2 —
+not token management. Two things are still worth a look from a shell that has the
+token, and both are cheap:
 
-1. Zero Trust / dashboard → My Profile → **API Tokens**.
-2. **Create one least-privilege token** for CI/deploys: Workers Scripts (edit),
-   Secrets Store (read), D1 (edit), R2 (edit), Vectorize (edit), Workers AI,
-   Account Settings (read). That is everything the deploys and this session's
-   work actually used.
-3. Put it in the site-admin repo secret `CLOUDFLARE_API_TOKEN`, and anywhere else
-   a deploy token is configured.
-4. **Roll (regenerate) or delete both "CF Master Token"s and the old `cfut_`
-   token.** Nothing should keep a master-scoped token in automation.
-5. Confirm a deploy still runs green with the new scoped token.
+- the new token's id and actual scopes
+- that the `site-admin` repo secret `CLOUDFLARE_API_TOKEN` holds the new value, not
+  a master left in place — one green deploy run proves it
 
-This single step also closes audit item A2 (deploy token needs Secrets Store
-read) and retires the never-used second master token.
+Closing this also closed audit item A2 (deploy token needs Secrets Store read) and
+retired the never-used second master token.
+
+### What this was, and why it is written down
+
+The account API token had been pasted into a chat transcript. It was a
+**full-account master token**: Secrets Store write, Workers Scripts write, Account
+API Tokens write, Access write, DNS, Email Routing — total control of the account.
+Two tokens carried the name "CF Master Token" (ids `d2fbf2c3…` used, `b3a2b3be…`
+never used), plus an older `cfut_`-prefixed token also pasted.
+
+The scoping that replaced it: Workers Scripts (edit), Secrets Store (read), D1
+(edit), R2 (edit), Vectorize (edit), Workers AI, Account Settings (read) — which is
+everything the deploys and the audit session actually exercised. Keep that list; it
+is the answer to "what scopes does the next token need."
+
+Either superseded id showing up in a config or workflow after this is a leftover to
+clean up, not a working credential to keep. Rotation procedure lives in
+`rotation-sops.md` → "`CLOUDFLARE_API_TOKEN`".
 
 ## 2. GitHub PAT `fsc-crm-api-push` — EMERGENCY
 

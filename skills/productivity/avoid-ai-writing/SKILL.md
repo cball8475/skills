@@ -95,17 +95,17 @@ Two related sections cover narrower slices of the same move: *Transition phrases
 
 **Not every hit is a frame.** The same shape that produces "Read that again." also produces "Read the cause list again in order, though," which sends the reader back to a specific list to compare it against a second one. The first announces importance; the second gives an instruction with a payload. A text scan cannot tell them apart, so treat every hit as a **candidate** and decide it by hand. Keep the ones doing work, cut the rest, and write the decision down — a rejection that is never recorded gets rewritten next draft.
 
-**Machine-readable shapes.** Tooling reads the block below; it is the single home for these patterns, the same way the tables above are the single home for the banned words. Each line is `name :: regex :: example`, the regex is matched case-insensitively, and every example but one is a verbatim clause rejected in a real draft. Add a shape here whenever a frame is rejected in review and the existing patterns miss it — `section-announcer`, `narrate-the-reaction` and `verdict-lands` were added on 2026-09-07 for exactly that reason, after a draft that already passed the earlier shapes came back with "Now the hazard," "Then the ignition source, and this one is almost unfair," and "The finding lands on the shift that didn't sweep."
+**Machine-readable shapes.** Tooling reads the block below; it is the single home for these patterns, the same way the tables above are the single home for the banned words. Each line is `name :: regex :: example`, the regex is matched case-insensitively, and every example but one is a verbatim clause rejected in a real draft. Add a shape here whenever a frame is rejected in review and the existing patterns miss it — `section-announcer`, `narrate-the-reaction` and `verdict-lands` were added on 2026-09-07 for exactly that reason, after a draft that already passed the earlier shapes came back with "Now the hazard," "Then the ignition source, and this one is almost unfair," and "The finding lands on the shift that didn't sweep." Four more followed on 2026-09-26, after a draft that passed at exit 0 came back from review with "Joaquin was moving. The picture wasn't." and "A list isn't just uncomfortable on a ship like this" marked as AI: `elliptical-reversal`, `not-just` and `not-x-its-y` for those rhythms, and `vague-reversal` plus `remember` in two verb lists, rejected in an earlier review and never added. A proposed `x-is-what-y` shape was tested and left out: across three published issues and both voice baselines it fired thirteen times, mostly on plain definitions ("coke is what a blast furnace runs on"), which is a scan people learn to wave through.
 
 
 ```steering-frames
 # name :: regex (matched case-insensitively) :: example of the shape
 now-the-part        :: \bnow,? the (part|bit|thing|piece|detail) (that|where|which)\b :: Now the part that decides everything.
 section-announcer   :: (?:^|(?<=[.!?]\s))(now|then|next),?\s+(?:for\s+|to\s+|on\s+|with\s+)?(the|what|how|why)\b :: Now for the exits. (Take a deep breath here.)
-reader-imperative   :: (?:^|(?<=[.!?]\s))(so\s+)?(read|re-?read|look at|consider|picture|watch|trace|follow|count)\s+(the|what|that|this|how|it|them)\b :: Read that again.
+reader-imperative   :: (?:^|(?<=[.!?]\s))(so\s+)?(read|re-?read|look at|consider|picture|watch|trace|follow|count|remember)\s+(the|what|that|this|how|it|them)\b :: Read that again.
 sit-with-it         :: \b(sit with|stay with|dwell on|hold onto|hold on to|let that (sit|land|sink))\b :: Sit with the shape of that.
 ask-the-question    :: \bask the (obvious|right|real|hard|uncomfortable|next) question\b :: Ask the obvious question.
-because-it-matters  :: \b(read|look at|notice)[^.\n]{0,60},\s*because\b :: Read the four conditions the report lists, because they aren't causes in the usual sense.
+because-it-matters  :: \b(read|look at|notice|remember)[^.\n]{0,60},\s*because\b :: Read the four conditions the report lists, because they aren't causes in the usual sense.
 here-is-the-x       :: \bhere(?:['’]s| is) the (move|thing|part|finding|point|one|kicker|catch|twist|detail)\b :: Here is the move worth stealing.
 put-it-on-a-wall    :: \b(put (it|that|this) on a wall|the (finding|line|sentence) I would|if you (remember|take) one thing)\b :: This is the finding I would put on a wall.
 now-set-that        :: (?:^|(?<=[.!?]\s))now\s+(set|put|hold|take|compare|line)\b :: Now set that against the casualty split.
@@ -113,6 +113,10 @@ worth-a-verb        :: \bworth (a moment|\w+ing)\b :: Two of the five are worth 
 narrate-the-reaction :: \b(th(is|at) (one|part|bit) is (almost |nearly )?(unfair|brutal|grim|bleak|the worst|the hardest)|this is where it gets|and it gets worse|the hard(est)? part is)\b :: And this one is almost unfair.
 verdict-lands        :: \bthe (finding|blame|failure|lesson|answer|fix|conclusion) (lands|falls|sits|points) (on|to|at|back)\b :: The finding lands on the shift that didn't sweep.
 announce-importance :: \b(this is the (key|crucial|important)|what matters here is|the (important|real) (part|thing|question) is|pay attention to|notice what|make no mistake)\b :: What matters here is the calendar.
+vague-reversal      :: (?:^|(?<=[.!?]\s))(?:something|someone|somebody|somewhere|no one|nobody) else\b :: The ad hoc procedure let the gas out. Something else decided who it would kill.
+elliptical-reversal :: (?:^|(?<=[.!?]\s))(?:[\w'’-]+\s+){0,4}[\w'’-]*(?:n['’]t|\bnot)\.(?=\s|$) :: Joaquin was moving. The picture wasn't.
+not-just            :: \b(?:is|was|are|were)(?:n['’]t| not) (?:just|only|merely|simply)\b|\bnot just\b[^.!?\n]{0,60}\bbut\b :: A list isn't just uncomfortable on a ship like this.
+not-x-its-y         :: \b(?:is|was)(?:n['’]t| not) (?:a|an|the) [^.,;:!?\n]{1,40}(?:[,;]\s*|[.!?]\s+)(?:it|that|this)(?:['’]s| is| was)\b :: If the answer is it depends who is on shift, the safeguard is not a safeguard. It's a habit.
 ```
 
 ### Words and phrases to replace
@@ -222,8 +226,9 @@ in a cluster or at density.
 | here's the thing | (cut — state the thing) | same family |
 | the detail that stings most | (cut — name the detail) | emotional flatline, rejected 2026-08-05 |
 | hold onto that *(steering frame; literal "hold onto the rail" is fine)* | (cut, or "that's the…") | rejected 2026-08-05 |
+| hold onto three / hold onto two / hold onto these / hold onto those / hold on to three / hold on to these *(steering frame, rejected twice)* | (cut — introduce each thing where it first matters) | rejected 2026-08-05 and again 2026-09-26 |
 
-The last four are **phrases, not words**, and they came from Charlie rejecting them
+The last five are **phrases, not words**, and they came from Charlie rejecting them
 in a draft rather than from the general tables: "I don't speak like that." The
 general skill already covers the shapes under *Infomercial engagement hooks* and
 *Emotional flatline*, but only as prose rules a reader has to apply. Listing the
